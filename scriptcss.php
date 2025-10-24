@@ -101,6 +101,7 @@ body.skin-blue .wrapper,
   color: #555 !important;
   padding: 14px 15px;
   margin: 4px;
+  margin-right: 7px;
   border-radius: var(--border-radius-sm);
   transition: all 0.2s ease;
 }
