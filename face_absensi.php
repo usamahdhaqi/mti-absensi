@@ -101,7 +101,7 @@ if(isset($_POST['btn-submit'])){
       </div> <div class="box">
         <div class="box-header with-border">
           <h3 class="box-title"><i class="fa fa-table"></i> Data Absensi</h3>
-          <div class="box-tools pull-right">
+          <div class="box-tools pull-right" style="top: 10px";>
             <a target="_blank" href="export_absensi.php" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none;">
               <i class="fa fa-file-excel-o"></i> EXPORT KE EXCEL
             </a>

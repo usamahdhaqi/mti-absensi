@@ -131,7 +131,7 @@ include('sidebar.php');
       </div> <div class="box">
         <div class="box-header with-border">
           <h3 class="box-title"><i class="fa fa-table"></i> Data Pengajuan Ijin</h3>
-          <div class="box-tools pull-right">
+          <div class="box-tools pull-right" style="top: 10px";>
             <a target="_blank" href="export_ijinabsensi.php" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none;">
               <i class="fa fa-file-excel-o"></i> EXPORT KE EXCEL
             </a>
