@@ -1,5 +1,5 @@
 <?php
-// Mulai session
+// SELALU mulai session di baris paling atas
 session_start();
 
 // 1. Hubungkan ke database
@@ -7,8 +7,11 @@ include 'config/db.php';
 
 // Pastikan variabel koneksi Anda adalah $con
 if (!$con) {
-    // Jika koneksi database itu sendiri gagal, kita tidak bisa melanjutkan
-    die("Koneksi gagal: " . mysqli_connect_error());
+    // Jika koneksi database-nya sendiri yang gagal
+    $_SESSION['notif_status'] = 'error';
+    $_SESSION['notif_message'] = 'Koneksi ke database gagal: ' . mysqli_connect_error();
+    header("Location: employee.php");
+    exit();
 }
 
 // 2. Cek apakah data dikirim dari form (method POST)
@@ -23,33 +26,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $jabatan = mysqli_real_escape_string($con, $_POST['jabatan']);
     $id_telegram = mysqli_real_escape_string($con, $_POST['id_telegram']);
 
-    // 4. Buat kueri SQL
-    // GANTI 'employee' DENGAN NAMA TABEL ANDA JIKA BERBEDA
-    $sql = "INSERT INTO employee (id_pegawai, nama_pegawai, email, no_hp, divisi, jabatan, id_telegram) 
-            VALUES ('$id_pegawai', '$nama_pegawai', '$email', '$no_hp', '$divisi', '$jabatan', '$id_telegram')";
-
-    // 5. Eksekusi kueri dan siapkan redirect
-    if (mysqli_query($con, $sql)) {
-        // --- SUKSES ---
-        // Kirim status sukses kembali ke halaman employee
-        header("Location: employee.php?status=sukses_tambah");
-        exit();
-    } else {
-        // --- GAGAL ---
-        // Ambil pesan error dari MySQL
-        $error_message = mysqli_error($con);
-        
-        // Kirim status gagal DAN pesan error-nya kembali ke halaman employee
-        // urlencode() penting agar pesan error aman dibawa di URL
-        header("Location: employee.php?status=gagal_tambah&error=" . urlencode($error_message));
+    // Validasi Sederhana (contoh: pastikan ID dan Nama tidak kosong)
+    if (empty($id_pegawai) || empty($nama_pegawai)) {
+        $_SESSION['notif_status'] = 'error';
+        $_SESSION['notif_message'] = 'Gagal: ID Pegawai dan Nama Pegawai tidak boleh kosong.';
+        header("Location: employee.php");
         exit();
     }
 
-    // 6. Tutup koneksi (baris ini tidak akan pernah tercapai, tapi ini praktik yang baik)
+    // 4. Buat kueri SQL
+    // GANTI 'employee' jika nama tabel Anda berbeda
+    $sql = "INSERT INTO employee (id_pegawai, nama_pegawai, email, no_hp, divisi, jabatan, id_telegram) 
+            VALUES ('$id_pegawai', '$nama_pegawai', '$email', '$no_hp', '$divisi', '$jabatan', '$id_telegram')";
+
+    // 5. Eksekusi kueri
+    if (mysqli_query($con, $sql)) {
+        // JIKA SUKSES
+        $_SESSION['notif_status'] = 'sukses';
+        $_SESSION['notif_message'] = "Karyawan '$nama_pegawai' berhasil ditambahkan.";
+        
+    } else {
+        // JIKA GAGAL
+        $_SESSION['notif_status'] = 'error';
+        
+        // Cek error spesifik (contoh: NIK/ID sudah ada)
+        if (mysqli_errno($con) == 1062) { // 1062 = Error 'Duplicate entry'
+            $_SESSION['notif_message'] = "Gagal: ID Pegawai '$id_pegawai' sudah terdaftar. Gunakan ID lain.";
+        } else {
+            // Error umum lainnya
+            $_SESSION['notif_message'] = 'Error: ' . mysqli_error($con);
+        }
+    }
+
+    // 6. Tutup koneksi dan redirect kembali APAPUN HASILNYA
     mysqli_close($con);
+    header("Location: employee.php");
+    exit();
 
 } else {
-    // Jika file diakses langsung tanpa POST, tendang kembali
+    // Jika file diakses langsung, tendang
     header("Location: employee.php");
     exit();
 }
