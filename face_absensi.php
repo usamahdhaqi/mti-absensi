@@ -185,7 +185,7 @@ if(isset($_POST['btn-submit'])){
                             echo '<td>'. htmlspecialchars($row['divisi']) . '</td>';
                             
                             // Foto Masuk
-                            $foto_masuk = "hasil_absensi/". $row['nama_pegawai'] . $row['waktu_masuk'] . '.jpg';
+                            $foto_masuk = "hasil_absensi/". $row['foto_masuk'];
                             echo '<td>';
                             if (file_exists($foto_masuk)) { // Cek jika foto ada
                               echo '<img style="width:80px; height:auto; cursor:pointer;" id="'.$no++.'" data-toggle="modal" data-target="#myModal" src="'.$foto_masuk.'" alt="'. htmlspecialchars($row['nama_pegawai']) . '" />';
@@ -195,9 +195,9 @@ if(isset($_POST['btn-submit'])){
                             echo '</td>';
 
                             // Foto Keluar
-                            $foto_keluar = "hasil_absensi/". $row['nama_pegawai'] . $row['waktu_keluar'] . '.jpg';
+                            $foto_keluar = (!empty($row['foto_keluar'])) ? "hasil_absensi/". $row['foto_keluar'] : null;
                             echo '<td>';
-                            if ($row['waktu_keluar'] && file_exists($foto_keluar)) { // Cek jika sudah waktu keluar & foto ada
+                            if ($foto_keluar && file_exists($foto_keluar)) {
                               echo '<img style="width:80px; height:auto; cursor:pointer;" id="'.$no++.'" data-toggle="modal" data-target="#myModal" src="'.$foto_keluar.'" alt="'. htmlspecialchars($row['nama_pegawai']) . '" />';
                             } else {
                               echo 'N/A';
