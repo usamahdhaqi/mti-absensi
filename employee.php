@@ -123,6 +123,14 @@ include('sidebar.php');
         <div class="box-header with-border">
           <h3 class="box-title"><i class="fa fa-table"></i> Data Karyawan</h3>
           <div class="box-tools pull-right">
+            <?php if (!empty($notif_message)): ?>
+              <div class="alert <?php echo $notif_class; ?> alert-dismissible fade show" role="alert">
+                <?php echo $notif_message; ?>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            <?php endif; ?>
             <button type="button" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none;" data-toggle="modal" data-target="#tambahKaryawanModal">
               <i class="fa fa-plus"></i> Tambah Karyawan
             </button>
