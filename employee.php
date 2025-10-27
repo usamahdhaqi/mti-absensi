@@ -95,6 +95,9 @@ include('sidebar.php');
         <div class="box-header with-border">
           <h3 class="box-title"><i class="fa fa-table"></i> Data Karyawan</h3>
           <div class="box-tools pull-right">
+            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahKaryawanModal">
+              <i class="fa fa-plus"></i> Tambah Karyawan
+            </button>
             <a target="_blank" href="export_employee.php" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none;">
               <i class="fa fa-file-excel-o"></i> EXPORT KE EXCEL
             </a>
@@ -200,6 +203,60 @@ include('sidebar.php');
   include('footer.php');
    ?>
 
+</div>
+
+<div class="modal fade" id="tambahKaryawanModal" tabindex="-1" role="dialog" aria-labelledby="tambahKaryawanModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      
+      <form action="proses_tambah_karyawan.php" method="POST">
+      
+        <div class="modal-header">
+          <h5 class="modal-title" id="tambahKaryawanModalLabel">Tambah Karyawan Baru</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="id_pegawai">ID Pegawai (NIK)</label>
+            <input type="text" class="form-control" id="id_pegawai" name="id_pegawai" placeholder="Contoh: 1001" required>
+          </div>
+          <div class="form-group">
+            <label for="nama_pegawai">Nama Lengkap</label>
+            <input type="text" class="form-control" id="nama_pegawai" name="nama_pegawai" placeholder="Contoh: Budi Santoso" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Contoh: budi@email.com">
+          </div>
+          <div class="form-group">
+            <label for="no_hp">No. HP</label>
+            <input type="text" class="form-control" id="no_hp" name="no_hp" placeholder="Contoh: 08123456...">
+          </div>
+          <div class="form-group">
+            <label for="divisi">Divisi</label>
+            <input type="text" class="form-control" id="divisi" name="divisi" placeholder="Contoh: IT">
+          </div>
+          <div class="form-group">
+            <label for="jabatan">Jabatan</label>
+            <input type="text" class="form-control" id="jabatan" name="jabatan" placeholder="Contoh: Staff">
+          </div>
+          <div class="form-group">
+            <label for="id_telegram">ID Telegram (Opsional)</label>
+            <input type="text" class="form-control" id="id_telegram" name="id_telegram" placeholder="Contoh: 12345678">
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Karyawan</button>
+        </div>
+        
+      </form>
+      </div>
+  </div>
 </div>
 
 </body>
