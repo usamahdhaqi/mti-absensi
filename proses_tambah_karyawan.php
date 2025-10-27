@@ -7,14 +7,14 @@ include 'config/db.php';
 
 // Pastikan variabel koneksi Anda adalah $con
 if (!$con) {
+    // Jika koneksi database itu sendiri gagal, kita tidak bisa melanjutkan
     die("Koneksi gagal: " . mysqli_connect_error());
 }
 
 // 2. Cek apakah data dikirim dari form (method POST)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // 3. Ambil data dari form dan bersihkan (basic security)
-    // Sesuaikan dengan name="" di form modal Anda
+    // 3. Ambil data dari form
     $id_pegawai = mysqli_real_escape_string($con, $_POST['id_pegawai']);
     $nama_pegawai = mysqli_real_escape_string($con, $_POST['nama_pegawai']);
     $email = mysqli_real_escape_string($con, $_POST['email']);
@@ -23,26 +23,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $jabatan = mysqli_real_escape_string($con, $_POST['jabatan']);
     $id_telegram = mysqli_real_escape_string($con, $_POST['id_telegram']);
 
-    // Kolom 'id' (auto-increment) dan 'warning' (default 0) tidak perlu dimasukkan di sini
-
-    // 4. Buat kueri SQL untuk INSERT data
-    // PERINGATAN: Ganti 'nama_tabel_karyawan' dengan nama tabel Anda yang sebenarnya!
-    // Kemungkinan nama tabelnya adalah 'employee' atau 'karyawan'
+    // 4. Buat kueri SQL
+    // GANTI 'employee' DENGAN NAMA TABEL ANDA JIKA BERBEDA
     $sql = "INSERT INTO employee (id_pegawai, nama_pegawai, email, no_hp, divisi, jabatan, id_telegram) 
             VALUES ('$id_pegawai', '$nama_pegawai', '$email', '$no_hp', '$divisi', '$jabatan', '$id_telegram')";
 
-    // 5. Eksekusi kueri
+    // 5. Eksekusi kueri dan siapkan redirect
     if (mysqli_query($con, $sql)) {
-        // Jika berhasil, kembalikan ke halaman employee
+        // --- SUKSES ---
+        // Kirim status sukses kembali ke halaman employee
         header("Location: employee.php?status=sukses_tambah");
         exit();
     } else {
-        // Jika gagal
-        echo "Error: " . $sql . "<br>"."<br>". mysqli_error($con);
-        echo "<br><br><a href='employee.php'>Kembali ke Halaman Karyawan</a>";
+        // --- GAGAL ---
+        // Ambil pesan error dari MySQL
+        $error_message = mysqli_error($con);
+        
+        // Kirim status gagal DAN pesan error-nya kembali ke halaman employee
+        // urlencode() penting agar pesan error aman dibawa di URL
+        header("Location: employee.php?status=gagal_tambah&error=" . urlencode($error_message));
+        exit();
     }
 
-    // 6. Tutup koneksi
+    // 6. Tutup koneksi (baris ini tidak akan pernah tercapai, tapi ini praktik yang baik)
     mysqli_close($con);
 
 } else {
