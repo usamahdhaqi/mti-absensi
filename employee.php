@@ -95,7 +95,7 @@ include('sidebar.php');
         <div class="box-header with-border">
           <h3 class="box-title"><i class="fa fa-table"></i> Data Karyawan</h3>
           <div class="box-tools pull-right">
-            <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#tambahKaryawanModal">
+            <button type="button" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none;" data-toggle="modal" data-target="#tambahKaryawanModal">
               <i class="fa fa-plus"></i> Tambah Karyawan
             </button>
             <a target="_blank" href="export_employee.php" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none;">
