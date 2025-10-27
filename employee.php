@@ -8,6 +8,34 @@ if (!isset($_SESSION['nama_log'])){
   header("location: index.php");
 }
 
+$notif_message = ''; // Variabel untuk menyimpan pesan
+$notif_class = ''; // Variabel untuk menyimpan warna alert (sukses/gagal)
+
+// Cek apakah ada parameter 'status' di URL
+if (isset($_GET['status'])) {
+    
+    // Jika statusnya adalah 'sukses_tambah'
+    if ($_GET['status'] == 'sukses_tambah') {
+        $notif_message = "<strong>Sukses!</strong> Data karyawan baru berhasil ditambahkan.";
+        $notif_class = "alert-success"; // Class Bootstrap untuk warna hijau
+    } 
+    
+    // Jika statusnya adalah 'gagal_tambah'
+    else if ($_GET['status'] == 'gagal_tambah') {
+        
+        // Ambil pesan error dari URL (jika ada) dan bersihkan
+        $error_message = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : 'Terjadi kesalahan tidak diketahui.';
+        
+        // Pesan error spesifik (misal: ID pegawai/NIK sudah ada)
+        if (strpos($error_message, 'Duplicate entry') !== false) {
+             $error_message = "ID Pegawai (NIK) tersebut sudah terdaftar. Silakan gunakan ID lain.";
+        }
+
+        $notif_message = "<strong>Gagal!</strong> Data tidak dapat disimpan. Error: " . $error_message;
+        $notif_class = "alert-danger"; // Class Bootstrap untuk warna merah
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html>
