@@ -244,7 +244,7 @@ include('sidebar.php');
             <input type="text" class="form-control" id="jabatan" name="jabatan" placeholder="Contoh: Staff">
           </div>
           <div class="form-group">
-            <label for="id_telegram">ID Telegram (Opsional)</label>
+            <label for="id_telegram">ID Telegram</label>
             <input type="text" class="form-control" id="id_telegram" name="id_telegram" placeholder="Contoh: 12345678">
           </div>
         </div>
