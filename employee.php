@@ -2,6 +2,19 @@
 // Start the session
 session_start();
 
+$notif_status = null;
+$notif_message = '';
+
+// Cek apakah ada notifikasi dari session
+if (isset($_SESSION['notif_status'])) {
+    $notif_status = $_SESSION['notif_status'];
+    $notif_message = $_SESSION['notif_message'];
+    
+    // HAPUS session agar notifikasi tidak muncul lagi saat refresh
+    unset($_SESSION['notif_status']);
+    unset($_SESSION['notif_message']);
+}
+
 // Cek Login Apakah Sudah Login atau Belum
 if (!isset($_SESSION['nama_log'])){
 // Jika Tidak Arahkan Kembali ke Halaman Login
@@ -95,7 +108,7 @@ include('sidebar.php');
         <div class="box-header with-border">
           <h3 class="box-title"><i class="fa fa-table"></i> Data Karyawan</h3>
           <div class="box-tools pull-right" style="top: 10px";>
-            <button type="button" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none;" data-toggle="modal" data-target="#tambahKaryawanModal">
+            <button type="button" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none; margin-right: 7px;" data-toggle="modal" data-target="#tambahKaryawanModal">
               <i class="fa fa-plus"></i> Tambah Karyawan
             </button>
             <a target="_blank" href="export_employee.php" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none;">
@@ -220,7 +233,7 @@ include('sidebar.php');
         
         <div class="modal-body">
           <div class="form-group">
-            <label for="id_pegawai">ID Pegawai (NIK)</label>
+            <label for="id_pegawai">ID Pegawai (NIP)</label>
             <input type="text" class="form-control" id="id_pegawai" name="id_pegawai" placeholder="Contoh: 1001" required>
           </div>
           <div class="form-group">
@@ -244,7 +257,7 @@ include('sidebar.php');
             <input type="text" class="form-control" id="jabatan" name="jabatan" placeholder="Contoh: Staff">
           </div>
           <div class="form-group">
-            <label for="id_telegram">ID Telegram</label>
+            <label for="id_telegram">ID Telegram (Optional)</label>
             <input type="text" class="form-control" id="id_telegram" name="id_telegram" placeholder="Contoh: 12345678">
           </div>
         </div>
@@ -258,6 +271,74 @@ include('sidebar.php');
       </div>
   </div>
 </div>
+
+<div class="modal fade" id="notifSuksesModal" tabindex="-1" role="dialog" aria-labelledby="notifSuksesModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="notifSuksesModalLabel">Sukses!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+            <i class="fa fa-check-circle fa-5x text-success mb-3"></i>
+            <h4 id="notifSuksesMessage"></h4>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="notifErrorModal" tabindex="-1" role="dialog" aria-labelledby="notifErrorModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="notifErrorModalLabel">Terjadi Masalah!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <div class="text-center">
+            <i class="fa fa-times-circle fa-5x text-danger mb-3"></i>
+            <h5 id="notifErrorMessage" class="text-dark"></h5>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Pastikan script ini dijalankan setelah library jQuery dan Bootstrap dimuat
+$(document).ready(function() {
+    
+    // Ambil status notif dari variabel PHP yang kita buat di Langkah 3A
+    var status = '<?php echo $notif_status; ?>';
+    var message = '<?php echo addslashes($notif_message); ?>'; // addslashes untuk keamanan
+
+    if (status === 'sukses') {
+        // Masukkan pesan ke modal sukses
+        $('#notifSuksesMessage').text(message);
+        // Tampilkan modal sukses
+        $('#notifSuksesModal').modal('show');
+        
+    } else if (status === 'error') {
+        // Masukkan pesan ke modal error
+        $('#notifErrorMessage').text(message);
+        // Tampilkan modal error
+        $('#notifErrorModal').modal('show');
+    }
+    
+});
+</script>
 
 </body>
 </html>
