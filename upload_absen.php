@@ -45,7 +45,7 @@
                     
                     <form action="proses_upload.php" method="post" enctype="multipart/form-data">
                         <div class="form-group">
-                            <label for="id_pegawai"><b>ID Pegawai (NIK) Anda:</b></label>
+                            <label for="id_pegawai"><b>ID Pegawai (NIP) Anda:</b></label>
                             <input type="text" class="form-control form-control-lg" name="id_pegawai" id="id_pegawai" placeholder="Masukkan ID Pegawai Anda" required>
                         </div>
                         

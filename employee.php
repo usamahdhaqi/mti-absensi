@@ -178,6 +178,18 @@ include('sidebar.php');
                             echo '<td>'. htmlspecialchars($row['warning1']) . '</td>';
                             echo '<td>'. htmlspecialchars($row['warning2']) . '</td>';
                             echo '<td>'. htmlspecialchars($row['warning3']) . '</td>';
+                            echo '<td>
+                                    <button type="button" class="btn btn-warning btn-sm btn-edit" 
+                                            data-toggle="modal" 
+                                            data-target="#editKaryawanModal" 
+                                            data-id="' . $row['id'] . '" 
+                                            data-idpegawai="' . htmlspecialchars($row['id_pegawai']) . '" 
+                                            data-nama="' . htmlspecialchars($row['nama_pegawai']) . '"
+                                            data-fotoprofil="' . htmlspecialchars($row['foto_profil']) . '">
+                                        <i class="fa fa-edit"></i> Edit / Upload Foto
+                                    </button>
+                                  </td>';
+                            echo '</tr>';
                             echo '</tr>';
                    }
                   ?>
@@ -272,6 +284,54 @@ include('sidebar.php');
   </div>
 </div>
 
+<div class="modal fade" id="editKaryawanModal" tabindex="-1" role="dialog" aria-labelledby="editKaryawanModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      
+      <form action="proses_edit_karyawan.php" method="POST" enctype="multipart/form-data">
+      
+        <div class="modal-header">
+          <h5 class="modal-title" id="editKaryawanModalLabel">Edit Karyawan</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        
+        <div class="modal-body">
+          <input type="hidden" id="edit_id_karyawan" name="id_karyawan">
+          
+          <div class="form-group">
+            <label>ID Pegawai (NIP)</label>
+            <input type="text" class="form-control" id="edit_id_pegawai" name="id_pegawai" readonly>
+          </div>
+          <div class="form-group">
+            <label>Nama Lengkap</label>
+            <input type="text" class="form-control" id="edit_nama_pegawai" name="nama_pegawai" required>
+          </div>
+          
+          <hr>
+          
+          <div class="form-group">
+            <label>Foto Profil (Foto Master)</label>
+            <p>Foto saat ini:</p>
+            <img src="" id="gambar_profil_sekarang" class="img-thumbnail" width="150px" alt="Foto Profil">
+            <br><br>
+            <label>Upload Foto Baru (Opsional)</label>
+            <input type="file" class="form-control-file" name="foto_profil_baru">
+            <small class="form-text text-muted">Hanya upload jika ingin mengganti foto master.</small>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+        </div>
+        
+      </form>
+      </div>
+  </div>
+</div>
+
 <div class="modal fade" id="notifSuksesModal" tabindex="-1" role="dialog" aria-labelledby="notifSuksesModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -337,6 +397,35 @@ $(document).ready(function() {
         $('#notifErrorModal').modal('show');
     }
     
+});
+</script>
+
+<script>
+$(document).ready(function() {
+    
+    // ... (JavaScript Anda yang lain, seperti notifikasi) ...
+
+    // JavaScript untuk memicu Modal EDIT
+    $('.btn-edit').on('click', function() {
+        // Ambil data dari atribut 'data-*' tombol
+        var id = $(this).data('id');
+        var id_pegawai = $(this).data('idpegawai');
+        var nama = $(this).data('nama');
+        var foto = $(this).data('fotoprofil');
+
+        // Masukkan data ke dalam form di modal
+        $('#edit_id_karyawan').val(id); // ID unik (penting untuk WHERE di SQL)
+        $('#edit_id_pegawai').val(id_pegawai);
+        $('#edit_nama_pegawai').val(nama);
+        
+        // Atur gambar profil yang ada
+        if(foto) {
+            $('#gambar_profil_sekarang').attr('src', 'foto_profil_karyawan/' + foto);
+        } else {
+            // Tampilkan gambar default jika tidak ada
+            $('#gambar_profil_sekarang').attr('src', 'foto_profil_karyawan/default.jpg'); 
+        }
+    });
 });
 </script>
 
