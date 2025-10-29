@@ -1,6 +1,8 @@
 <?php
 // Hubungkan ke database
 include 'config/db.php'; // Pastikan $con ada dari file ini
+// Fungsi Helper
+include 'helper_pesan.php'; // Memuat fungsi 'tampilkan_pesan'
 
 // =================================================================
 // === FUNGSI PENCOCOKAN WAJAH (VIA SERVER AI/FLASK - VERSI BASE64) ===
@@ -64,30 +66,6 @@ function pencocokanWajahOpenSource($path_foto_master, $path_foto_absen) {
 // =================================================================
 // === AKHIR FUNGSI AI ===
 // =================================================================
-
-
-// Fungsi Helper untuk menampilkan pesan (JANGAN UBAH INI)
-function tampilkan_pesan($status, $judul, $pesan, $info_tambahan = "") {
-    $header_class = 'bg-info'; $icon_class = 'fas fa-info-circle'; $icon_color = 'text-info';
-    if ($status == 'sukses') { $header_class = 'bg-success'; $icon_class = 'fas fa-check-circle'; $icon_color = 'text-success'; } 
-    else if ($status == 'error') { $header_class = 'bg-danger'; $icon_class = 'fas fa-times-circle'; $icon_color = 'text-danger'; } 
-    else if ($status == 'warning') { $header_class = 'bg-warning'; $icon_class = 'fas fa-exclamation-triangle'; $icon_color = 'text-warning'; } 
-    else if ($status == 'info') { $header_class = 'bg-primary'; $icon_class = 'fas fa-sign-out-alt'; $icon_color = 'text-primary'; }
-    echo <<<HTML
-    <!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Status Absensi</title><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>body { background-color: #f4f6f9; padding-top: 40px; } .card { border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: none; } .card-header { border-top-left-radius: 10px; border-top-right-radius: 10px; }</style>
-    </head><body class="container"><div class="row"><div class="col-md-6 offset-md-3"><div class="card text-center">
-    <div class="card-header $header_class text-white"><h4 class="mb-0">$judul</h4></div>
-    <div class="card-body" style="padding: 30px;"><i class="$icon_class fa-4x $icon_color mb-3"></i>
-    <p style="font-size: 1.1rem;">$pesan</p><p class="text-muted">$info_tambahan</p>
-    <a href='upload_absen.php' class="btn btn-secondary mt-3"><i class="fas fa-arrow-left"></i> Kembali</a>
-    </div></div></div></div></body></html>
-HTML;
-}
-// AKHIR FUNGSI HELPER
-
 
 // =================================================================
 // PROSES UTAMA
