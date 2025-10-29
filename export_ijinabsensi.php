@@ -1,7 +1,7 @@
 <?php
 // Start the session
 session_start();
-include('config/db.php'); // Pastikan $conn ada di sini
+include('config/db.php'); // Pastikan $con ada di sini
 
 // Cek jika tidak login (opsional, tambahkan jika perlu)
 // if (!isset($_SESSION['nama_log'])){ header("location: index.php"); exit(); }
@@ -40,7 +40,7 @@ header("Content-Disposition: attachment; filename=DataIjinAbsensi.xls");
     // === AWAL PERBAIKAN FILTER ===
     $divisi_filter_sql = "";
     if (isset($_SESSION['valuedivisi']) && $_SESSION['valuedivisi'] != 'All' && !empty($_SESSION['valuedivisi'])) {
-        $div = mysqli_real_escape_string($conn, $_SESSION['valuedivisi']);
+        $div = mysqli_real_escape_string($con, $_SESSION['valuedivisi']);
         $divisi_filter_sql = " AND e.divisi = '$div' "; // Filter berdasarkan tabel employee (alias e)
     }
 
@@ -74,7 +74,7 @@ header("Content-Disposition: attachment; filename=DataIjinAbsensi.xls");
                    . " ORDER BY i.waktu_buat_ijin DESC"; // Urutkan berdasarkan waktu pengajuan
 
     // Eksekusi Kueri dengan mysqli_query
-    $query_export = mysqli_query($conn, $sql_export); 
+    $query_export = mysqli_query($con, $sql_export); 
     
     $noe = 1;
     // Loop data dengan mysqli_fetch_assoc

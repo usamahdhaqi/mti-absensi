@@ -1,7 +1,7 @@
 <?php
 // Start the session
 session_start();
-include('config/db.php'); // Pastikan $conn ada di sini
+include('config/db.php'); // Pastikan $con ada di sini
 
 // Siapkan header Excel SEBELUM output apapun
 header("Content-type: application/vnd-ms-excel");
@@ -36,7 +36,7 @@ header("Content-Disposition: attachment; filename=DataPegawai.xls");
     // === PERBAIKAN FILTER DIVISI ===
     $divisi_filter_sql = "";
     if (isset($_SESSION['valuedivisi']) && $_SESSION['valuedivisi'] != 'All' && !empty($_SESSION['valuedivisi'])) {
-        $div = mysqli_real_escape_string($conn, $_SESSION['valuedivisi']);
+        $div = mysqli_real_escape_string($con, $_SESSION['valuedivisi']);
         $divisi_filter_sql = " AND divisi = '$div' "; 
     }
     // === AKHIR PERBAIKAN FILTER ===
@@ -46,7 +46,7 @@ header("Content-Disposition: attachment; filename=DataPegawai.xls");
                    . $divisi_filter_sql 
                    . " ORDER BY nama_pegawai ASC";
 
-    $query_export = mysqli_query($conn, $sql_export); 
+    $query_export = mysqli_query($con, $sql_export); 
     
     $noe = 1;
     while ($row = mysqli_fetch_assoc($query_export)) {

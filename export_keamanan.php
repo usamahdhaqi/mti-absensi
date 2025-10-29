@@ -1,7 +1,7 @@
 <?php
 // Start the session
 session_start();
-include('config/db.php'); // Pastikan $conn ada di sini
+include('config/db.php'); // Pastikan $con ada di sini
 
 // Siapkan header Excel SEBELUM output apapun
 header("Content-type: application/vnd-ms-excel");
@@ -58,7 +58,7 @@ header("Content-Disposition: attachment; filename=DataLogKeamanan.xls");
                    . $tanggal_sampai_filter_sql 
                    . " ORDER BY waktu_kejadian DESC";
 
-    $query_export = mysqli_query($conn, $sql_export); 
+    $query_export = mysqli_query($con, $sql_export); 
     
     $noe = 1;
     while ($row = mysqli_fetch_assoc($query_export)) {
