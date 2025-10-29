@@ -161,7 +161,7 @@ if (isset($_POST['submit'])) {
                             (id_pegawai_input, path_foto_master, path_foto_gagal, waktu_kejadian, pesan_error)
                         VALUES 
                             ('$id_pegawai_input', '$path_foto_master', '$nama_file_gagal', '$waktu_kejadian', '$pesan_error')";
-            mysqli_query($conn, $sql_log);
+            mysqli_query($con, $sql_log);
             
             // 4. Tampilkan pesan error ke user (seperti sebelumnya)
             tampilkan_pesan(
@@ -170,7 +170,7 @@ if (isset($_POST['submit'])) {
                 $pesan_error, // Pesan error dinamis dari fungsi AI
                 'Kejadian ini telah dicatat. Silakan coba lagi atau hubungi Admin.'
             );
-            mysqli_close($conn);
+            mysqli_close($con);
             exit(); // Hentikan proses
         }
         
