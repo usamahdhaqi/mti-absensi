@@ -1,110 +1,96 @@
 <?php
 // Start the session
 session_start();
+include('config/db.php'); // Pastikan $conn ada di sini
 
+// Cek jika tidak login (opsional, tambahkan jika perlu)
+// if (!isset($_SESSION['nama_log'])){ header("location: index.php"); exit(); }
+
+// Siapkan header Excel SEBELUM output apapun
+header("Content-type: application/vnd-ms-excel");
+header("Content-Disposition: attachment; filename=DataIjinAbsensi.xls");
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Export Data Ijin Absensi Ke Excel</title>
+	<style type="text/css">
+	body{ font-family: sans-serif; }
+	table{ margin: 20px auto; border-collapse: collapse; }
+	table th, table td{ border: 1px solid #3c3c3c; padding: 3px 8px; }
+	</style>
 </head>
 <body>
-	<style type="text/css">
-	body{
-		font-family: sans-serif;
-	}
-	table{
-		margin: 20px auto;
-		border-collapse: collapse;
-	}
-	table th,
-	table td{
-		border: 1px solid #3c3c3c;
-		padding: 3px 8px;
-
-	}
-	a{
-		background: blue;
-		color: #fff;
-		padding: 8px 10px;
-		text-decoration: none;
-		border-radius: 2px;
-	}
-	</style>
-  <?php
-    include('config/db.php');
-
-   ?>
-
-	<?php
-	header("Content-type: application/vnd-ms-excel");
-	header("Content-Disposition: attachment; filename=DataIjinAbsensi.xls");
-	?>
-
-	<left>
-		<h1>Data Ijin Absensi Metro Teknologi Informatika</h1>
-	</left>
-
+	<left><h1>Data Ijin Absensi Metro Teknologi Informatika</h1></left>
 	<table border="1">
 		<tr>
       <th>No</th>
       <th>Nama Pegawai</th>
-      <th>Ijin</th>
-      <th>Alasan Ijin</th>
-      <th>Tanggal Ijin</th>
-      <th>Waktu Membuat Ijin</th>
+      <th>Jenis Izin</th>
+      <th>Keterangan Ijin</th>
+      <th>Tanggal Izin</th>
+      <th>Waktu Pengajuan</th>
       <th>Divisi</th>
       <th>Atasan</th>
-      <th>Approve/Disapprove Dari Atasan</th>
-      <th>Alasan Approve/Disapprove</th>
+      <th>Status Persetujuan</th>
+      <th>Disetujui/Ditolak Oleh</th>
+      <th>Alasan Persetujuan/Penolakan</th>
 		</tr>
-
     <?php
-    $sqlemp = "SELECT *, employee.divisi FROM `ijin_absensi` JOIN employee ON ijin_absensi.nama_pegawai=employee.nama_pegawai ";
-    $sqlemp .= "WHERE 1 ";
-
-    if (strlen($_SESSION['valuedivisi'])>=1) {
-         if ($_SESSION['valuedivisi']=='All') {
-           $sqlemp .= " ";
-           $total_pages_sql .= " ";
-         }else {
-           $div=$_SESSION['valuedivisi'];
-           $sqlemp .= "AND divisi='$div' ";
-           $total_pages_sql .= "AND divisi='$div' ";
-         }
-     }
-
-    if (strlen($_SESSION['from'])>5) {
-      $date = new DateTime($_SESSION['from']);
-      $dt1=$date->format('Y-m-d'); // To match MySQL date format
-      $sqlemp .= "AND DATE(face_keamanan.waktu)>= '$dt1' " ;
-      $total_pages_sql .= "AND DATE(face_keamanan.waktu)>= '$dt1' ";
+    // === AWAL PERBAIKAN FILTER ===
+    $divisi_filter_sql = "";
+    if (isset($_SESSION['valuedivisi']) && $_SESSION['valuedivisi'] != 'All' && !empty($_SESSION['valuedivisi'])) {
+        $div = mysqli_real_escape_string($conn, $_SESSION['valuedivisi']);
+        $divisi_filter_sql = " AND e.divisi = '$div' "; // Filter berdasarkan tabel employee (alias e)
     }
 
-    if (strlen($_SESSION['to'])>5) {
-      $date = new DateTime($_SESSION['to']);
-      $dt2=$date->format('Y-m-d'); // To match MySQL date format
-      $sqlemp .= "AND DATE(face_keamanan.waktu)<= '$dt2' " ;
-      $total_pages_sql .= "AND DATE(face_keamanan.waktu)<= '$dt2' ";
+    $tanggal_dari_filter_sql = "";
+    if (isset($_SESSION['from']) && !empty($_SESSION['from'])) {
+        try {
+            $date = new DateTime($_SESSION['from']);
+            $dt1 = $date->format('Y-m-d');
+            $tanggal_dari_filter_sql = " AND i.tanggal_ijin >= '$dt1' "; // Filter berdasarkan ijin_absensi (alias i)
+        } catch (Exception $e) {}
     }
 
-    $sqlemp .= "ORDER BY ijin_absensi.waktu_buat_ijin ";
+    $tanggal_sampai_filter_sql = "";
+    if (isset($_SESSION['to']) && !empty($_SESSION['to'])) {
+       try {
+           $date = new DateTime($_SESSION['to']);
+           $dt2 = $date->format('Y-m-d');
+           $tanggal_sampai_filter_sql = " AND i.tanggal_ijin <= '$dt2' "; // Filter berdasarkan ijin_absensi (alias i)
+       } catch (Exception $e) {}
+    }
+    // === AKHIR PERBAIKAN FILTER ===
 
-    $query = $con->query($sqlemp);
-    $noe=1;
-    while ($row = $query->fetch_assoc()) {
+    // Bangun Kueri SQL Utama
+    $sql_export = "SELECT i.*, e.divisi
+                   FROM ijin_absensi i
+                   LEFT JOIN employee e ON i.nama_pegawai = e.nama_pegawai
+                   WHERE 1=1 " // Kondisi awal (bisa dihapus jika tidak ada filter wajib lain)
+                   . $divisi_filter_sql 
+                   . $tanggal_dari_filter_sql 
+                   . $tanggal_sampai_filter_sql 
+                   . " ORDER BY i.waktu_buat_ijin DESC"; // Urutkan berdasarkan waktu pengajuan
+
+    // Eksekusi Kueri dengan mysqli_query
+    $query_export = mysqli_query($conn, $sql_export); 
+    
+    $noe = 1;
+    // Loop data dengan mysqli_fetch_assoc
+    while ($row = mysqli_fetch_assoc($query_export)) {
       echo '<tr>';
       echo '<td>'. $noe++ . '</td>';
-      echo '<td>'. $row['nama_pegawai'] . '</td>';
-      echo '<td>'. $row['ijin'] . '</td>';
-      echo '<td>'. $row['alasan_ijin'] . '</td>';
-      echo '<td>'. $row['tanggal_ijin'] . '</td>';
-      echo '<td>'. $row['waktu_buat_ijin'] . '</td>';
-      echo '<td>'. $row['divisi'] . '</td>';
-      echo '<td>'. $row['atasan'] . '</td>';
-      echo '<td>'. $row['app'] . '</td>';
-      echo '<td>'. $row['alasan_app_dpp'] . '</td>';
+      echo '<td>'. htmlspecialchars($row['nama_pegawai']) . '</td>';
+      echo '<td>'. htmlspecialchars($row['ijin']) . '</td>';
+      echo '<td>'. htmlspecialchars($row['alasan_ijin']) . '</td>';
+      echo '<td>'. htmlspecialchars($row['tanggal_ijin']) . '</td>';
+      echo '<td>'. htmlspecialchars($row['waktu_buat_ijin']) . '</td>';
+      echo '<td>'. htmlspecialchars($row['divisi']) . '</td>';
+      echo '<td>'. htmlspecialchars($row['atasan']) . '</td>';
+      echo '<td>'. htmlspecialchars($row['app']) . '</td>';
+      echo '<td>'. htmlspecialchars($row['app_by']) . '</td>';
+      echo '<td>'. htmlspecialchars($row['alasan_app_dpp']) . '</td>';
       echo '</tr>';
     }
     ?>

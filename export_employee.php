@@ -1,51 +1,24 @@
 <?php
 // Start the session
 session_start();
+include('config/db.php'); // Pastikan $conn ada di sini
 
+// Siapkan header Excel SEBELUM output apapun
+header("Content-type: application/vnd-ms-excel");
+header("Content-Disposition: attachment; filename=DataPegawai.xls");
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Export Data Karyawan Ke Excel</title>
+	<style type="text/css">
+	body{ font-family: sans-serif; }
+	table{ margin: 20px auto; border-collapse: collapse; }
+	table th, table td{ border: 1px solid #3c3c3c; padding: 3px 8px; }
+	</style>
 </head>
 <body>
-	<style type="text/css">
-	body{
-		font-family: sans-serif;
-	}
-	table{
-		margin: 20px auto;
-		border-collapse: collapse;
-	}
-	table th,
-	table td{
-		border: 1px solid #3c3c3c;
-		padding: 3px 8px;
-
-	}
-	a{
-		background: blue;
-		color: #fff;
-		padding: 8px 10px;
-		text-decoration: none;
-		border-radius: 2px;
-	}
-	</style>
-  <?php
-    include('config/db.php');
-
-   ?>
-
-	<?php
-	header("Content-type: application/vnd-ms-excel");
-	header("Content-Disposition: attachment; filename=DataPegawai.xls");
-	?>
-
-	<left>
-		<h1>Data Karyawan Metro Teknologi Informatika</h1>
-	</left>
-
+	<left><h1>Data Karyawan Metro Teknologi Informatika</h1></left>
 	<table border="1">
 		<tr>
       <th>No</th>
@@ -59,37 +32,36 @@ session_start();
       <th>Warning 2</th>
       <th>Warning 3</th>
 		</tr>
-
     <?php
-    $sqlemp = "SELECT * FROM `employee` ";
-    $sqlemp .= "WHERE 1 ";
+    // === PERBAIKAN FILTER DIVISI ===
+    $divisi_filter_sql = "";
+    if (isset($_SESSION['valuedivisi']) && $_SESSION['valuedivisi'] != 'All' && !empty($_SESSION['valuedivisi'])) {
+        $div = mysqli_real_escape_string($conn, $_SESSION['valuedivisi']);
+        $divisi_filter_sql = " AND divisi = '$div' "; 
+    }
+    // === AKHIR PERBAIKAN FILTER ===
 
-    if (strlen($_SESSION['valuedivisi'])>=1) {
-         if ($_SESSION['valuedivisi']=='All') {
-           $sqlemp .= " ";
-           $total_pages_sql .= " ";
-         }else {
-           $div=$_SESSION['valuedivisi'];
-           $sqlemp .= "AND divisi='$div' ";
-           $total_pages_sql .= "AND divisi='$div' ";
-         }
-     }
+    $sql_export = "SELECT * FROM employee 
+                   WHERE 1=1 " 
+                   . $divisi_filter_sql 
+                   . " ORDER BY nama_pegawai ASC";
 
-    $query = $con->query($sqlemp);
-    $noe=1;
-    while ($row = $query->fetch_assoc()) {
-             echo '<tr>';
-             echo '<td>'. $noe++ . '</td>';
-             echo '<td>'. $row['nama_pegawai'] . '</td>';
-             echo '<td>'. $row['id_pegawai'] . '</td>';
-             echo '<td>'. $row['email'] . '</td>';
-             echo '<td>'. $row['no_hp'] . '</td>';
-             echo '<td>'. $row['divisi'] . '</td>';
-             echo '<td>'. $row['jabatan'] . '</td>';
-             echo '<td>'. $row['warning1'] . '</td>';
-             echo '<td>'. $row['warning2'] . '</td>';
-             echo '<td>'. $row['warning3'] . '</td>';
-             echo '</tr>';
+    $query_export = mysqli_query($conn, $sql_export); 
+    
+    $noe = 1;
+    while ($row = mysqli_fetch_assoc($query_export)) {
+        echo '<tr>';
+        echo '<td>'. $noe++ . '</td>';
+        echo '<td>'. htmlspecialchars($row['nama_pegawai']) . '</td>';
+        echo '<td>'. htmlspecialchars($row['id_pegawai']) . '</td>';
+        echo '<td>'. htmlspecialchars($row['email']) . '</td>';
+        echo '<td>'. htmlspecialchars($row['no_hp']) . '</td>';
+        echo '<td>'. htmlspecialchars($row['divisi']) . '</td>';
+        echo '<td>'. htmlspecialchars($row['jabatan']) . '</td>';
+        echo '<td>'. htmlspecialchars($row['warning1']) . '</td>';
+        echo '<td>'. htmlspecialchars($row['warning2']) . '</td>';
+        echo '<td>'. htmlspecialchars($row['warning3']) . '</td>';
+        echo '</tr>';
     }
     ?>
 	</table>
