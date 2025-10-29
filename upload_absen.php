@@ -48,31 +48,31 @@
             margin: 0 auto;
         }
 
-        /* ================================== */
-        /* === CSS BARU UNTUK WARNA GELAP === */
-        /* ================================== */
-
+        /* CSS BARU UNTUK WARNA GELAP */
         .text-dark-green {
             color: #1E7E34; /* Hijau Tua */
         }
-
         .text-custom-orange {
-             /* Ganti dari #D35400 ke #E67E22 */
             color: #E67E22; /* Jingga Kustom */
         }
-
         .btn-custom-orange {
-            /* Ganti dari #D35400 ke #E67E22 */
             background-color: #E67E22; 
             border-color: #E67E22;
             color: #fff; /* Teks putih */
         }
-        /* Efek saat kursor mouse di atas tombol */
         .btn-custom-orange:hover {
-            /* Ganti ke #F39C12 (sedikit lebih terang) */
             background-color: #F39C12; 
             border-color: #F39C12;
             color: #fff;
+        }
+        
+        /* CSS untuk link izin */
+        .link-ijin {
+            font-weight: 600; /* Sedikit tebal */
+            color: #1E7E34; /* Samakan dengan warna hijau */
+        }
+        .link-ijin:hover {
+            color: #155724; /* Sedikit lebih gelap saat hover */
         }
 
     </style>
@@ -87,7 +87,7 @@
                         <div class="text-center mb-4">
                             <img src="dist/img/logomti.jpg" alt="Logo Perusahaan" style="max-height: 100px;">
                             
-                            <h3 class="mt-3 text-dark-green">Form Absensi Mandiri</h3>
+                            <h4 class="mt-3 text-dark-green">Form Absensi Mandiri</h4>
                         </div>
 
                         <form id="form-absen" action="proses_upload.php" method="post" enctype="multipart/form-data">
@@ -113,6 +113,14 @@
                                 <i class="fas fa-paper-plane"></i> Kirim Absen
                             </button>
                         </form>
+                        
+                        <div class="text-center mt-3">
+                            <small class="text-muted">
+                                Atau, ingin mengajukan Izin/Sakit? 
+                                <a href="form_ijin.php" class="link-ijin">Klik di sini</a>
+                            </small>
+                        </div>
+                        
                     </div>
 
                     <div id="loading-container">

@@ -32,7 +32,7 @@
                     <div id="form-container">
                         <div class="text-center mb-4">
                             <img src="dist/img/logomti.jpg" alt="Logo Perusahaan" style="max-height: 100px;">
-                            <h3 class="mt-3 text-dark-green">Form Pengajuan Izin/Sakit</h3>
+                            <h4 class="mt-3 text-dark-green">Form Pengajuan Izin/Sakit</h4>
                         </div>
 
                         <form id="form-ijin" action="proses_ijin.php" method="post" enctype="multipart/form-data">

@@ -133,8 +133,45 @@ if (isset($_POST['submit'])) {
         list($apakah_wajah_cocok, $pesan_error) = pencocokanWajahOpenSource($path_foto_master, $tmp_file);
 
         if (!$apakah_wajah_cocok) {
-            tampilkan_pesan('error', 'Wajah Tidak Dikenali!', $pesan_error, 'Silakan coba lagi dengan pencahayaan lebih baik.');
-            mysqli_close($con); exit();
+            // =======================================================
+            // === LOG KEAMANAN (SAAT GAGAL) ===
+            // =======================================================
+            
+            // 1. Siapkan nama file baru untuk foto GAGAL
+            $folder_tujuan_gagal = "hasil_keamanan/";
+            if (!is_dir($folder_tujuan_gagal)) { mkdir($folder_tujuan_gagal, 0755, true); }
+            
+            $waktu_gagal_file = date('Y-m-d_H-i-s');
+            // Coba ambil ekstensi, default ke 'jpg' jika gagal
+            $ext_gagal = pathinfo($_FILES['fotoAbsen']['name'], PATHINFO_EXTENSION) ?: 'jpg';
+
+            $nama_file_gagal = "FAILED_" . $id_pegawai_input . "_" . $waktu_gagal_file . "." . $ext_gagal;
+            $path_tujuan_gagal = $folder_tujuan_gagal . $nama_file_gagal;
+
+            // 2. Pindahkan file gagal dari temp ke 'hasil_keamanan'
+            if (move_uploaded_file($tmp_file, $path_tujuan_gagal)) {
+                // File berhasil disimpan
+            } else {
+                $nama_file_gagal = "Gagal menyimpan file.";
+            }
+
+            // 3. Masukkan ke DB log_keamanan
+            $waktu_kejadian = date('Y-m-d H:i:s');
+            $sql_log = "INSERT INTO log_keamanan 
+                            (id_pegawai_input, path_foto_master, path_foto_gagal, waktu_kejadian, pesan_error)
+                        VALUES 
+                            ('$id_pegawai_input', '$path_foto_master', '$nama_file_gagal', '$waktu_kejadian', '$pesan_error')";
+            mysqli_query($conn, $sql_log);
+            
+            // 4. Tampilkan pesan error ke user (seperti sebelumnya)
+            tampilkan_pesan(
+                'error',
+                'Wajah Tidak Dikenali!',
+                $pesan_error, // Pesan error dinamis dari fungsi AI
+                'Kejadian ini telah dicatat. Silakan coba lagi atau hubungi Admin.'
+            );
+            mysqli_close($conn);
+            exit(); // Hentikan proses
         }
         
         // LANJUT JIKA WAJAH COCOK...
