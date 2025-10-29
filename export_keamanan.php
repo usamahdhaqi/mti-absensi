@@ -43,7 +43,7 @@ session_start();
 	?>
 
 	<left>
-		<h1>Data Kemanan PT Graha Sumber Prima Elektronik</h1>
+		<h1>Data Kemanan Metro Teknologi Informatika</h1>
 	</left>
 
 	<table border="1">
