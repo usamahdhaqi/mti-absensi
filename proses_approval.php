@@ -1,7 +1,10 @@
 <?php
 // Mulai session untuk mengambil nama admin
 session_start();
-include 'config/db.php'; // Hubungkan ke DB
+
+// Hubungkan ke DB dan Helper WA baru
+include 'config/db.php'; 
+include 'helper_kirim_wa.php'; // <-- MEMUAT FUNGSI KIRIM WA
 
 // Cek jika admin tidak login atau data tidak dikirim
 if (!isset($_SESSION['nama_log']) || !isset($_POST['ijin_id']) || !isset($_POST['action'])) {
@@ -12,26 +15,23 @@ if (!isset($_SESSION['nama_log']) || !isset($_POST['ijin_id']) || !isset($_POST[
 $ijin_id = mysqli_real_escape_string($con, $_POST['ijin_id']);
 $action = mysqli_real_escape_string($con, $_POST['action']); // "Approve" atau "Reject"
 $admin_name = mysqli_real_escape_string($con, $_SESSION['nama_log']);
-
-// === PERUBAHAN: Ambil data textarea 'alasan_reject' ===
 $alasan_approval = mysqli_real_escape_string($con, $_POST['alasan_reject']);
 
 // Tentukan status baru
 $new_status = 'Pending';
 if ($action == 'Approve') {
     $new_status = 'Approved';
-    // Jika diapprove, kita tidak perlu simpan alasannya
-    $alasan_approval = NULL; 
+    if (empty($alasan_approval)) {
+        $alasan_approval = 'Disetujui'; // Beri alasan default jika kosong
+    }
 } else if ($action == 'Reject') {
     $new_status = 'Rejected';
-    // Jika ditolak tapi alasannya kosong, beri pesan default
     if (empty($alasan_approval)) {
         $alasan_approval = 'Ditolak tanpa keterangan';
     }
 }
 
 // 1. UPDATE status di tabel 'ijin_absensi'
-// === PERUBAHAN: Tambahkan kolom 'alasan_app_dpp' ===
 $sql_update = "UPDATE ijin_absensi 
                SET app = '$new_status', 
                    app_by = '$admin_name',
@@ -40,35 +40,53 @@ $sql_update = "UPDATE ijin_absensi
 
 if (mysqli_query($con, $sql_update)) {
     
-    // 2. JIKA DISETUJUI (Approve), masukkan ke tabel 'not_absensi'
-    if ($action == 'Approve') {
+    // 2. AMBIL DATA LENGKAP KARYAWAN UNTUK NOTIFIKASI
+    // (Kita JOIN dengan 'employee' untuk mengambil 'no_hp')
+    $sql_get_data = "SELECT 
+                        i.nama_pegawai, 
+                        i.tanggal_ijin, 
+                        i.ijin, 
+                        e.no_hp,
+                        e.id_pegawai 
+                     FROM ijin_absensi i
+                     LEFT JOIN employee e ON i.nama_pegawai = e.nama_pegawai
+                     WHERE i.id = '$ijin_id' LIMIT 1";
+                     
+    $result_data = mysqli_query($con, $sql_get_data);
+    
+    if (mysqli_num_rows($result_data) > 0) {
+        $data_karyawan = mysqli_fetch_assoc($result_data);
         
-        // Ambil data dari pengajuan yang baru disetujui
-        $sql_get = "SELECT nama_pegawai, tanggal_ijin FROM ijin_absensi WHERE id = '$ijin_id' LIMIT 1";
-        $result_get = mysqli_query($con, $sql_get);
-        $row_ijin = mysqli_fetch_assoc($result_get);
+        $nama_pegawai = $data_karyawan['nama_pegawai'];
+        $no_hp = $data_karyawan['no_hp'];
+        $id_pegawai = $data_karyawan['id_pegawai'];
+        $tanggal_ijin_db = $data_karyawan['tanggal_ijin'];
+        $tanggal_ijin_formatted = date('d M Y', strtotime($tanggal_ijin_db));
+        $jenis_ijin = $data_karyawan['ijin'];
         
-        $nama_pegawai = $row_ijin['nama_pegawai'];
-        $tanggal_absen = $row_ijin['tanggal_ijin'];
+        // 3. SIAPKAN PESAN WA
+        $pesan_wa = "";
         
-        // Ambil ID Pegawai dari tabel 'employee' (berdasarkan nama)
-        $sql_get_id = "SELECT id_pegawai FROM employee WHERE nama_pegawai = '$nama_pegawai' LIMIT 1";
-        $result_id = mysqli_query($con, $sql_get_id);
-        $employee_id = 'N/A'; // Default jika tidak ketemu
-        
-        if (mysqli_num_rows($result_id) > 0) {
-            $row_emp = mysqli_fetch_assoc($result_id);
-            $employee_id = $row_emp['id_pegawai'];
+        if ($action == 'Approve') {
+            $pesan_wa = "Halo $nama_pegawai,\n\nPengajuan *($jenis_ijin)* Anda untuk tanggal *$tanggal_ijin_formatted* telah disetujui (Approved) oleh $admin_name.\n\nCatatan: $alasan_approval\n\nTerima kasih.\n(Pesan Otomatis - Absensi MTI)";
+            
+            // 4A. JIKA DISETUJUI, masukkan ke tabel 'not_absensi'
+            $sql_insert_not = "INSERT INTO not_absensi (employee_id, nama_pegawai, tanggal_absen) 
+                               VALUES ('$id_pegawai', '$nama_pegawai', '$tanggal_ijin_db')";
+            mysqli_query($con, $sql_insert_not);
+
+        } else if ($action == 'Reject') {
+            $pesan_wa = "Halo $nama_pegawai,\n\nMohon maaf, pengajuan *($jenis_ijin)* Anda untuk tanggal *$tanggal_ijin_formatted* telah ditolak (Rejected) oleh $admin_name.\n\nAlasan: $alasan_approval\n\nSilakan hubungi HRD atau ajukan ulang jika diperlukan.\n(Pesan Otomatis - Absensi MTI)";
         }
         
-        // Masukkan ke tabel 'not_absensi'
-        $sql_insert_not = "INSERT INTO not_absensi (employee_id, nama_pegawai, tanggal_absen) 
-                           VALUES ('$employee_id', '$nama_pegawai', '$tanggal_absen')";
-        
-        mysqli_query($con, $sql_insert_not);
+        // 5. KIRIM WA (jika ada nomor HP)
+        if (!empty($pesan_wa) && !empty($no_hp)) {
+            // Memanggil fungsi dari 'helper_kirim_wa.php'
+            kirimPesanWA($no_hp, $pesan_wa);
+        }
     }
     
-    // 3. Kembalikan Admin ke halaman manajemen izin
+    // 6. Kembalikan Admin ke halaman manajemen izin
     header("Location: ijin_absensi.php");
     exit();
     
