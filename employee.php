@@ -76,7 +76,7 @@ include('sidebar.php');
         <div class="box-body">
           <form action="employee.php" method="post">
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-4 col-sm-6 col-xs-12">
                 <div class="form-group">
                   <label>Pilih Filter Divisi</label>
                   <select name="valuedivisi" class="form-control">
@@ -94,14 +94,12 @@ include('sidebar.php');
                   </select>
                 </div>
               </div>
-              <div class="col-md-4">
-                </div>
-              <div class="col-md-4">
+              <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="form-group">
                   <label>&nbsp;</label> <input type="submit" name="btn-submit" value="Search" class="btn btn-primary btn-block" style="background-color: var(--color-secondary-green); border: none;">
                 </div>
               </div>
-            </div>
+              </div>
           </form>
         </div>
       </div> <div class="box">
@@ -109,10 +107,10 @@ include('sidebar.php');
           <h3 class="box-title"><i class="fa fa-table"></i> Data Karyawan</h3>
           <div class="box-tools pull-right" style="top: 10px";>
             <button type="button" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none; margin-right: 7px;" data-toggle="modal" data-target="#tambahKaryawanModal">
-              <i class="fa fa-plus"></i> Tambah Karyawan
+              <i class="fa fa-plus"></i><span class="btn-text-mobile-hide"> Tambah Karyawan</span>
             </button>
             <a target="_blank" href="export_employee.php" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none;">
-              <i class="fa fa-file-excel-o"></i> EXPORT KE EXCEL
+              <i class="fa fa-file-excel-o"></i><span class="btn-text-mobile-hide"> EXPORT KE EXCEL</span>
             </a>
           </div>
         </div>

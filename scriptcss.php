@@ -226,6 +226,51 @@ body.skin-blue .wrapper,
   font-size: 13px;
 }
 
+/* ... semua gaya kustom Anda yang ada ... */
+.login-links {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+/* --- 7. Penyesuaian Responsif --- */
+@media (max-width: 767px) {
+  
+  /* Sembunyikan teks pada tombol di header .box untuk layar kecil */
+  .btn-text-mobile-hide {
+    display: none;
+  }
+
+  /* Rapikan tata letak box-tools di mobile.
+    Ini akan membuat judul (box-title) tampil dulu, 
+    lalu tombol-tombol akan muncul di baris baru di bawahnya.
+    Ini jauh lebih rapi di layar sempit.
+  */
+  .box-header .box-tools {
+    float: none; /* Hapus float */
+    text-align: left; /* Ratakan tombol ke kiri (atau 'right' jika suka) */
+    position: relative;
+    top: auto;
+    right: auto;
+    margin-top: 10px; /* Beri jarak dari judul */
+  }
+
+  /* Beri jarak antar tombol */
+  .box-header .box-tools .btn {
+    margin-bottom: 5px; /* Tambahkan margin bawah jika tombolnya jadi 2 baris */
+  }
+
+  /* Membuat modal (popup) bisa di-scroll di layar kecil 
+    jika kontennya sangat panjang.
+  */
+  .modal-body {
+     max-height: 60vh; /* Batasi tinggi modal body */
+     overflow-y: auto; /* Tambahkan scroll jika perlu */
+  }
+
+}
+
 </style>
 
 <!-- ./wrapper -->
