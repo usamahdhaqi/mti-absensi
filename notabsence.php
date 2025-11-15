@@ -1,14 +1,13 @@
 <?php
-// Start the session
 session_start();
-include 'config/db.php'; // Hubungkan ke DB
+include 'config/db.php';
 
 // Cek Login
 if (!isset($_SESSION['nama_log'])){
   header("location: index.php");
 }
 
-// Logika Filter (Sama seperti halaman lain)
+// Logika Filter
 if(isset($_POST['btn-submit'])){
   $_SESSION['valuedivisi'] = $_POST['valuedivisi'];
   $_SESSION['from'] = $_POST['from'];
@@ -125,17 +124,12 @@ if(isset($_POST['btn-submit'])){
                 $no_of_records_per_page = 25;
                 $offset = ($pageno-1) * $no_of_records_per_page;
 
-                // =======================================================
-                // === AWAL DARI LOGIKA KUERI BARU ===
-                // =======================================================
-
                 // 1. Siapkan Tanggal Hari Ini (WIB)
                 date_default_timezone_set('Asia/Jakarta');
                 $tanggal_hari_ini = date('Y-m-d');
 
                 // 2. Buat Kueri Basis
                 // Kueri ini MENGGABUNGKAN 'ijin_absensi' (i) dengan 'employee' (e)
-                // Ini perlu agar kita bisa filter berdasarkan DIVISI
                 $base_sql = "
                   FROM ijin_absensi i
                   LEFT JOIN employee e ON i.nama_pegawai = e.nama_pegawai 
@@ -143,7 +137,7 @@ if(isset($_POST['btn-submit'])){
                       i.app = 'Approved'  -- Filter: HANYA yang sudah disetujui
                 ";
                 
-                // 3. Tambahkan Filter Divisi (jika ada)
+                // 3. Tambahkan Filter Divisi
                 if (isset($_SESSION['valuedivisi']) && strlen($_SESSION['valuedivisi']) >= 1) {
                     if ($_SESSION['valuedivisi'] != 'All') {
                         $div = mysqli_real_escape_string($con, $_SESSION['valuedivisi']);
@@ -151,7 +145,7 @@ if(isset($_POST['btn-submit'])){
                     }
                 }
                 
-                // 4. Tambahkan Filter Tanggal (jika ada)
+                // 4. Tambahkan Filter Tanggal
                 if (isset($_SESSION['from']) && strlen($_SESSION['from']) > 5) {
                    $date = new DateTime($_SESSION['from']);
                    $dt1 = $date->format('Y-m-d');
@@ -171,10 +165,6 @@ if(isset($_POST['btn-submit'])){
 
                 // 6. Kueri untuk Data Karyawan (Tampilan)
                 $sqlemp = "SELECT i.*, e.id_pegawai, e.divisi " . $base_sql . " ORDER BY i.tanggal_ijin DESC LIMIT $offset, $no_of_records_per_page";
-                
-                // =======================================================
-                // === AKHIR DARI LOGIKA KUERI BARU ===
-                // =======================================================
 
                 $query = mysqli_query($con, $sqlemp);
                 
@@ -192,7 +182,6 @@ if(isset($_POST['btn-submit'])){
                     echo '<td>'. htmlspecialchars($row['ijin']) . '</td>';
                     echo '<td>'. date('d M Y', strtotime($row['tanggal_ijin'])) . '</td>';
                     
-                    // === KOLOM BARU YANG ANDA MINTA ===
                     echo '<td>'. htmlspecialchars($row['alasan_ijin']) . '</td>'; 
                     
                     echo '<td><a href="Lampiran/'. htmlspecialchars($row['lampiran']) .'" target="_blank" class="btn btn-info btn-xs"><i class="fa fa-eye"></i> Lihat</a></td>';
@@ -225,7 +214,7 @@ if(isset($_POST['btn-submit'])){
   <?php include('footer.php'); ?>
 </div>
 <?php 
-// Include scriptjs.php dan juga kode untuk datepicker
+
 include('scriptjs.php'); 
 ?>
 <script>

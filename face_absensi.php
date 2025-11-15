@@ -1,5 +1,4 @@
 <?php
-// Start the session
 session_start();
 
 // Cek Login Apakah Sudah Login atau Belum

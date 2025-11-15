@@ -1,7 +1,6 @@
 <?php
-// Start the session
 session_start();
-include('config/db.php'); // Pastikan $con ada di sini
+include('config/db.php');
 
 // Siapkan header Excel SEBELUM output apapun
 header("Content-type: application/vnd-ms-excel");
@@ -32,7 +31,7 @@ header("Content-Disposition: attachment; filename=DataAbsensi.xls");
       <th>Divisi</th>
 		</tr>
     <?php
-    // === AWAL PERBAIKAN FILTER ===
+
     $divisi_filter_sql = "";
     if (isset($_SESSION['valuedivisi']) && $_SESSION['valuedivisi'] != 'All' && !empty($_SESSION['valuedivisi'])) {
         $div = mysqli_real_escape_string($con, $_SESSION['valuedivisi']);
@@ -56,7 +55,6 @@ header("Content-Disposition: attachment; filename=DataAbsensi.xls");
            $tanggal_sampai_filter_sql = " AND DATE(fa.waktu_masuk) <= '$dt2' "; // Filter berdasarkan face_absensi (alias fa)
        } catch (Exception $e) {}
     }
-    // === AKHIR PERBAIKAN FILTER ===
 
     $sql_export = "SELECT fa.*, e.divisi, e.id_pegawai AS employee_id_from_employee 
                    FROM face_absensi fa 

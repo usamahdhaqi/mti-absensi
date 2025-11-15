@@ -1,9 +1,8 @@
 <?php
-// Start the session
 session_start();
-include 'config/db.php'; // Hubungkan ke DB
+include 'config/db.php';
 
-// Cek Login (ambil dari file Anda yang lain)
+// Cek Login
 if (!isset($_SESSION['nama_log'])){
   header("location: index.php");
 }
@@ -92,9 +91,6 @@ $admin_name = $_SESSION['nama_log'];
                     else if ($status == 'Rejected') { $badge_class = 'bg-red'; }
                     echo '<td><span class="label '. $badge_class .'">'. $status .'</span></td>';
                     
-                    // =============================================
-                    // === PERUBAHAN KOLOM AKSI DI SINI ===
-                    // =============================================
                     echo '<td>';
                     if ($row['app'] == 'Pending') {
                         // Tombol Biru tunggal untuk memicu modal
@@ -174,7 +170,6 @@ $admin_name = $_SESSION['nama_log'];
 
 <script>
 $(document).ready(function() {
-    // Saat tombol .btn-aksi (tombol 'Tindakan') diklik
     $('.btn-aksi').on('click', function() {
         // 1. Ambil data dari atribut 'data-*' tombol
         var id_ijin = $(this).data('id_ijin');

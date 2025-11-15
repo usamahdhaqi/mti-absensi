@@ -1,5 +1,4 @@
 <?php
-// Start the session
 session_start();
 
 $notif_status = null;
@@ -86,7 +85,6 @@ include('sidebar.php');
                         $query2 = $con->query($divisisql);
                         while ($row = $query2->fetch_assoc()) {
                           $div=$row['divisi'];
-                          // Tambahkan 'selected' jika session value = $div
                           $selected = (isset($_SESSION['valuedivisi']) && $_SESSION['valuedivisi'] == $div) ? 'selected' : '';
                           echo "<option name='divisi' value='". $div."' $selected>" . $div. "</option>\n";
                         }
@@ -375,10 +373,9 @@ include('sidebar.php');
 </div>
 
 <script>
-// Pastikan script ini dijalankan setelah library jQuery dan Bootstrap dimuat
 $(document).ready(function() {
     
-    // Ambil status notif dari variabel PHP yang kita buat di Langkah 3A
+    // Ambil status notif dari variabel PHP
     var status = '<?php echo $notif_status; ?>';
     var message = '<?php echo addslashes($notif_message); ?>'; // addslashes untuk keamanan
 
@@ -400,8 +397,6 @@ $(document).ready(function() {
 
 <script>
 $(document).ready(function() {
-    
-    // ... (JavaScript Anda yang lain, seperti notifikasi) ...
 
     // JavaScript untuk memicu Modal EDIT
     $('.btn-edit').on('click', function() {
@@ -412,7 +407,7 @@ $(document).ready(function() {
         var foto = $(this).data('fotoprofil');
 
         // Masukkan data ke dalam form di modal
-        $('#edit_id_karyawan').val(id); // ID unik (penting untuk WHERE di SQL)
+        $('#edit_id_karyawan').val(id); // ID unik
         $('#edit_id_pegawai').val(id_pegawai);
         $('#edit_nama_pegawai').val(nama);
         

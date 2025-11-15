@@ -1,9 +1,7 @@
 <?php
-// Start the session
 session_start();
-include('config/db.php'); // Pastikan $con ada di sini
+include('config/db.php');
 
-// Siapkan header Excel SEBELUM output apapun
 header("Content-type: application/vnd-ms-excel");
 header("Content-Disposition: attachment; filename=DataTidakAbsensi.xls");
 ?>
@@ -28,7 +26,7 @@ header("Content-Disposition: attachment; filename=DataTidakAbsensi.xls");
       <th>Divisi</th>
       <th>Jenis Izin</th>      <th>Keterangan</th>    <th>Disetujui Oleh</th> </tr>
     <?php
-    // === AWAL PERBAIKAN FILTER ===
+    
     $divisi_filter_sql = "";
     if (isset($_SESSION['valuedivisi']) && $_SESSION['valuedivisi'] != 'All' && !empty($_SESSION['valuedivisi'])) {
         $div = mysqli_real_escape_string($con, $_SESSION['valuedivisi']);
@@ -54,7 +52,6 @@ header("Content-Disposition: attachment; filename=DataTidakAbsensi.xls");
            $tanggal_sampai_filter_sql = " AND i.tanggal_ijin <= '$dt2' "; 
        } catch (Exception $e) {}
     }
-    // === AKHIR PERBAIKAN FILTER ===
 
     // Ambil data dari ijin_absensi yang sudah 'Approved'
     $sql_export = "SELECT i.*, e.divisi, e.id_pegawai

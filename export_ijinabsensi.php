@@ -1,12 +1,8 @@
 <?php
-// Start the session
+
 session_start();
-include('config/db.php'); // Pastikan $con ada di sini
+include('config/db.php');
 
-// Cek jika tidak login (opsional, tambahkan jika perlu)
-// if (!isset($_SESSION['nama_log'])){ header("location: index.php"); exit(); }
-
-// Siapkan header Excel SEBELUM output apapun
 header("Content-type: application/vnd-ms-excel");
 header("Content-Disposition: attachment; filename=DataIjinAbsensi.xls");
 ?>
@@ -37,7 +33,7 @@ header("Content-Disposition: attachment; filename=DataIjinAbsensi.xls");
       <th>Alasan Persetujuan/Penolakan</th>
 		</tr>
     <?php
-    // === AWAL PERBAIKAN FILTER ===
+    
     $divisi_filter_sql = "";
     if (isset($_SESSION['valuedivisi']) && $_SESSION['valuedivisi'] != 'All' && !empty($_SESSION['valuedivisi'])) {
         $div = mysqli_real_escape_string($con, $_SESSION['valuedivisi']);
@@ -61,23 +57,21 @@ header("Content-Disposition: attachment; filename=DataIjinAbsensi.xls");
            $tanggal_sampai_filter_sql = " AND i.tanggal_ijin <= '$dt2' "; // Filter berdasarkan ijin_absensi (alias i)
        } catch (Exception $e) {}
     }
-    // === AKHIR PERBAIKAN FILTER ===
 
     // Bangun Kueri SQL Utama
     $sql_export = "SELECT i.*, e.divisi
                    FROM ijin_absensi i
                    LEFT JOIN employee e ON i.nama_pegawai = e.nama_pegawai
-                   WHERE 1=1 " // Kondisi awal (bisa dihapus jika tidak ada filter wajib lain)
+                   WHERE 1=1 "
                    . $divisi_filter_sql 
                    . $tanggal_dari_filter_sql 
                    . $tanggal_sampai_filter_sql 
                    . " ORDER BY i.waktu_buat_ijin DESC"; // Urutkan berdasarkan waktu pengajuan
 
-    // Eksekusi Kueri dengan mysqli_query
     $query_export = mysqli_query($con, $sql_export); 
     
     $noe = 1;
-    // Loop data dengan mysqli_fetch_assoc
+
     while ($row = mysqli_fetch_assoc($query_export)) {
       echo '<tr>';
       echo '<td>'. $noe++ . '</td>';

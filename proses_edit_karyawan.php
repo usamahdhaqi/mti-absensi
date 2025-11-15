@@ -1,17 +1,16 @@
 <?php
 session_start();
-include 'config/db.php'; // Hubungkan ke DB
+include 'config/db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Ambil data dari form
     $id_karyawan = mysqli_real_escape_string($con, $_POST['id_karyawan']); // ID unik (primary key)
     $nama_pegawai = mysqli_real_escape_string($con, $_POST['nama_pegawai']);
-    // (Anda bisa tambahkan field lain di sini jika ingin mengeditnya juga, misal divisi, jabatan)
 
     $sql_update = "UPDATE employee SET nama_pegawai = '$nama_pegawai' ";
 
-    // === PROSES UPLOAD FOTO PROFIL (JIKA ADA) ===
+    // === PROSES UPLOAD FOTO PROFIL ===
     if (isset($_FILES['foto_profil_baru']) && $_FILES['foto_profil_baru']['error'] == 0) {
         
         $foto = $_FILES['foto_profil_baru'];

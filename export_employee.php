@@ -1,9 +1,7 @@
 <?php
-// Start the session
 session_start();
-include('config/db.php'); // Pastikan $con ada di sini
+include('config/db.php');
 
-// Siapkan header Excel SEBELUM output apapun
 header("Content-type: application/vnd-ms-excel");
 header("Content-Disposition: attachment; filename=DataPegawai.xls");
 ?>
@@ -33,13 +31,12 @@ header("Content-Disposition: attachment; filename=DataPegawai.xls");
       <th>Warning 3</th>
 		</tr>
     <?php
-    // === PERBAIKAN FILTER DIVISI ===
+    
     $divisi_filter_sql = "";
     if (isset($_SESSION['valuedivisi']) && $_SESSION['valuedivisi'] != 'All' && !empty($_SESSION['valuedivisi'])) {
         $div = mysqli_real_escape_string($con, $_SESSION['valuedivisi']);
         $divisi_filter_sql = " AND divisi = '$div' "; 
     }
-    // === AKHIR PERBAIKAN FILTER ===
 
     $sql_export = "SELECT * FROM employee 
                    WHERE 1=1 " 

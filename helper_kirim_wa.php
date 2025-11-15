@@ -8,20 +8,12 @@
  */
 function kirimPesanWA($nomor_tujuan, $pesan) {
     
-    // =======================================================
-    // === MASUKKAN TOKEN ANDA DI SINI ===
-    // (Salin dari dashboard Fonnte Anda)
-    // =======================================================
     $TOKEN = "4s7XHoSmVzaKn5QUDWKs"; 
-    // =======================================================
 
     // Pastikan nomor HP formatnya 628... (bukan 08...)
     if (substr($nomor_tujuan, 0, 1) == '0') {
         $nomor_tujuan = '62' . substr($nomor_tujuan, 1);
     }
-    
-    // Ubah spasi menjadi %20 (beberapa server gateway memerlukannya)
-    //$pesan = urlencode($pesan);
 
     $curl = curl_init();
 

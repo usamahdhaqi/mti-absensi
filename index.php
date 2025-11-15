@@ -1,7 +1,7 @@
 <?php
 session_start();
 error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-include('config/db.php'); // Sertakan koneksi DB di atas
+include('config/db.php');
 
 // 1. REDIRECT JIKA SUDAH LOGIN
 // Jika pengguna sudah login, langsung arahkan ke halaman utama
@@ -12,7 +12,7 @@ if (isset($_SESSION['nama_log'])) {
 
 $error_message = ""; // Variabel untuk menyimpan pesan error
 
-// 2. PROSES LOGIN (DIPINDAHKAN KE ATAS)
+// 2. PROSES LOGIN
 if(isset($_POST['tSubmit'])){
     $Nama_Login = $_POST['nama_login'];
     $Pass = $_POST['password'];
@@ -37,7 +37,7 @@ if(isset($_POST['tSubmit'])){
 
             $row = mysqli_fetch_assoc($sql);
             $_SESSION['nama_log'] = $row['nama_login'];
-            $_SESSION['pass'] = $row['password']; // Sebaiknya jangan simpan password di session
+            $_SESSION['pass'] = $row['password']; 
             
             header("Location: employee.php");
             exit;
@@ -53,19 +53,19 @@ if(isset($_POST['tSubmit'])){
   <title>MTI Absensi | Login</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <?php
-  include('scriptcss.php') // CSS Kustom kita sudah ada di dalam file ini
+  include('scriptcss.php') 
   ?>
   <?php
-  // include('config/db.php') // Sudah dipindahkan ke atas
+
   ?>
 </head>
 <body class="hold-transition sidebar-mini login-page">
 <div class="wrapper">
 <?php
-include('header.php'); // Ini akan disembunyikan oleh CSS di halaman login
+include('header.php'); 
 ?>
 <?php
-include('sidebar.php'); // Ini juga akan disembunyikan oleh CSS
+include('sidebar.php');
 ?>
 
   <div class="content-wrapper">
@@ -124,11 +124,6 @@ include('sidebar.php'); // Ini juga akan disembunyikan oleh CSS
     </section>
     </div>
   <?php
-  /* Kita tidak perlu footer di halaman login, 
-    tetapi jika halaman lain membutuhkannya, biarkan saja.
-    CSS kustom akan menanganinya jika diperlukan.
-  */
-  // include('footer.php'); 
   ?>
 
 </div>

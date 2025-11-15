@@ -1,7 +1,6 @@
 <?php
-// Start the session
 session_start();
-include 'config/db.php'; // Hubungkan ke DB
+include 'config/db.php';
 
 // Cek Login
 if (!isset($_SESSION['nama_log'])){

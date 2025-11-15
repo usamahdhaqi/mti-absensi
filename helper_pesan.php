@@ -1,5 +1,4 @@
 <?php
-// File: helper_pesan.php
 
 /**
  * Menampilkan halaman notifikasi (Sukses, Error, Warning, Info)
@@ -47,7 +46,6 @@ function tampilkan_pesan($status, $judul, $pesan, $info_tambahan = "") {
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <style>
-            /* Style kustom untuk tampilan modern */
             body { 
                 background-color: #f4f6f9; 
                 padding-top: 40px; 
@@ -86,6 +84,6 @@ function tampilkan_pesan($status, $judul, $pesan, $info_tambahan = "") {
     </body>
     </html>
 HTML;
-} // Akhir dari function tampilkan_pesan
+}
 
 ?>

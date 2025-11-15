@@ -1,7 +1,7 @@
 <?php
 // Start the session
 session_start();
-include 'config/db.php'; // Hubungkan ke DB
+include 'config/db.php';
 
 // Cek Login (ambil dari file Anda yang lain)
 if (!isset($_SESSION['nama_log'])){
@@ -55,7 +55,6 @@ if(isset($_POST['btn-submit'])){
                   <select name="valuedivisi" class="form-control">
                       <option name="divisi" value="All">All</option>
                       <?php
-                        // Ganti $con->query menjadi mysqli_query($con, ...)
                         $divisisql="SELECT DISTINCT divisi FROM employee WHERE 1 ORDER BY divisi";
                         $query2 = mysqli_query($con, $divisisql);
                         while ($row = mysqli_fetch_assoc($query2)) {
@@ -105,15 +104,11 @@ if(isset($_POST['btn-submit'])){
                 $no_of_records_per_page = 25;
                 $offset = ($pageno-1) * $no_of_records_per_page;
 
-                // =======================================================
-                // === AWAL DARI LOGIKA KUERI BARU ===
-                // =======================================================
-
                 // 1. Tentukan Tanggal Hari Ini (WIB)
                 date_default_timezone_set('Asia/Jakarta');
                 $tanggal_hari_ini = date('Y-m-d');
 
-                // 2. Siapkan Filter Divisi (jika ada)
+                // 2. Siapkan Filter Divisi
                 $filter_divisi_sql = "";
                 // Perbaikan dari kode lama Anda (mengecek isset dan strlen)
                 if (isset($_SESSION['valuedivisi']) && strlen($_SESSION['valuedivisi']) >= 1) {
@@ -124,7 +119,6 @@ if(isset($_POST['btn-submit'])){
                 }
 
                 // 3. Buat Kueri Basis (Base Query)
-                // Kueri ini menggabungkan semua logika
                 $base_sql = "
                   FROM employee e
                   LEFT JOIN face_absensi fa ON e.id_pegawai = fa.employee_id AND DATE(fa.waktu_masuk) = '$tanggal_hari_ini'
@@ -144,10 +138,6 @@ if(isset($_POST['btn-submit'])){
 
                 // 5. Kueri untuk Data Karyawan (Tampilan)
                 $sqlemp = "SELECT e.* " . $base_sql . " ORDER BY e.nama_pegawai ASC LIMIT $offset, $no_of_records_per_page";
-                
-                // =======================================================
-                // === AKHIR DARI LOGIKA KUERI BARU ===
-                // =======================================================
 
                 $query = mysqli_query($con, $sqlemp);
                 
@@ -179,7 +169,7 @@ if(isset($_POST['btn-submit'])){
                   <a href="<?php if($pageno <= 1){ echo '#'; } else { echo "?pageno=".($pageno - 1); } ?>">Prev</a>
               </li>
               <?php
-                // Loop pagination (Anda bisa salin dari file 'face_absensi.php' jika ini beda)
+                // Loop pagination
                 for ($i=1; $i<=$total_pages; $i++){
                     if($pageno == $i){ $cls="active"; } else { $cls=""; }
                     echo "<li class='{$cls}'><a href='?pageno={$i}'>{$i}</a></li>";

@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     
     <style>
-        /* (Salin semua CSS kustom dari upload_absen.php ke sini) */
         body { background-color: #f4f6f9; padding-top: 40px; }
         .card { border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: none; }
         #loading-container { display: none; padding: 60px 20px; text-align: center; }

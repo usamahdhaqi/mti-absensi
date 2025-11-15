@@ -1,9 +1,8 @@
 <?php
-// Start the session
-session_start();
-include('config/db.php'); // Pastikan $con ada di sini
 
-// Siapkan header Excel SEBELUM output apapun
+session_start();
+include('config/db.php');
+
 header("Content-type: application/vnd-ms-excel");
 header("Content-Disposition: attachment; filename=DataLogKeamanan.xls");
 ?>
@@ -29,8 +28,6 @@ header("Content-Disposition: attachment; filename=DataLogKeamanan.xls");
       <th>Path Foto Master</th>
 		</tr>
     <?php
-    // === AWAL PERBAIKAN FILTER (HANYA TANGGAL) ===
-    // Filter Divisi tidak relevan karena log_keamanan tidak punya data divisi
     
     $tanggal_dari_filter_sql = "";
     if (isset($_SESSION['from']) && !empty($_SESSION['from'])) {
@@ -49,9 +46,7 @@ header("Content-Disposition: attachment; filename=DataLogKeamanan.xls");
            $tanggal_sampai_filter_sql = " AND DATE(waktu_kejadian) <= '$dt2' "; // Filter berdasarkan waktu_kejadian
        } catch (Exception $e) {}
     }
-    // === AKHIR PERBAIKAN FILTER ===
 
-    // Ambil data dari log_keamanan
     $sql_export = "SELECT * FROM log_keamanan 
                    WHERE 1=1 " 
                    . $tanggal_dari_filter_sql 
