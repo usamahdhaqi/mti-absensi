@@ -118,11 +118,11 @@ include('sidebar.php');
                   <thead>
                     <tr>
                       <th>No</th>
-                      <th>Nama Pegawai</th>
-                      <th>NIP</th>
+                      <th>Nama Peserta Didik</th>
+                      <th>NIS</th>
                       <th>Email</th>
                       <th>No HP</th>
-                      <th>kelas</th>
+                      <th>Reg/PKL</th>
                       <th>jurusan</th>
                       <th>Warning 1</th>
                       <th>Warning 2</th>
@@ -241,7 +241,7 @@ include('sidebar.php');
         
         <div class="modal-body">
           <div class="form-group">
-            <label for="nis">ID Pegawai (NIP)</label>
+            <label for="nis">ID Peserta Didik (NIS)</label>
             <input type="text" class="form-control" id="nis" name="nis" placeholder="Contoh: 1001" required>
           </div>
           <div class="form-group">
@@ -257,12 +257,12 @@ include('sidebar.php');
             <input type="text" class="form-control" id="no_hp" name="no_hp" placeholder="Contoh: 08123456...">
           </div>
           <div class="form-group">
-            <label for="kelas">kelas</label>
-            <input type="text" class="form-control" id="kelas" name="kelas" placeholder="Contoh: IT">
+            <label for="kelas">Reg/PKL</label>
+            <input type="text" class="form-control" id="kelas" name="kelas" placeholder="Contoh: Reguler">
           </div>
           <div class="form-group">
             <label for="jurusan">jurusan</label>
-            <input type="text" class="form-control" id="jurusan" name="jurusan" placeholder="Contoh: Staff">
+            <input type="text" class="form-control" id="jurusan" name="jurusan" placeholder="Contoh: Administrasi Profesional">
           </div>
           <div class="form-group">
             <label for="id_telegram">ID Telegram (Optional)</label>

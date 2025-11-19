@@ -1,8 +1,8 @@
 <?php
-// Ambil nama file PHP yang sedang dibuka (misal: "employee.php")
+// 1. Ambil nama file halaman saat ini
 $current_page = basename($_SERVER['PHP_SELF']);
 
-// Tentukan halaman apa saja yang masuk menu "Karyawan"
+// 2. Daftar Halaman Karyawan
 $karyawan_pages = [
     'employee.php',
     'face_absensi.php',
@@ -12,19 +12,19 @@ $karyawan_pages = [
     'ijin_absensi.php'
 ];
 
-// Tentukan halaman apa saja yang masuk menu "Peserta Didik"
+// 3. Daftar Halaman Peserta Didik
 $siswa_pages = [
-    'data_siswa.php',           // (Ini file placeholder, Anda harus membuatnya nanti)
-    'absensi_siswa.php',        // (Ini file placeholder)
-    'tidak_absensi_siswa.php', // (Ini file placeholder)
-    'belum_absensi_siswa.php',  // (Ini file placeholder)
-    'keamanan_siswa.php',       // (Ini file placeholder)
-    'ijin_absensi_siswa.php'  // (Ini file placeholder)
+    'data_siswa.php',
+    'absensi_siswa.php',
+    'tidak_absensi_siswa.php',
+    'belum_absensi_siswa.php',
+    'keamanan_siswa.php',
+    'ijin_absensi_siswa.php'
 ];
 
-// Cek apakah halaman saat ini ada di dalam array
-$is_karyawan_page = in_array($current_page, $karyawan_pages);
-$is_siswa_page = in_array($current_page, $siswa_pages);
+// 4. Logika Cek Aktif (True/False)
+$is_karyawan_active = in_array($current_page, $karyawan_pages);
+$is_siswa_active = in_array($current_page, $siswa_pages);
 ?>
 
 <aside class="main-sidebar">
@@ -43,42 +43,65 @@ $is_siswa_page = in_array($current_page, $siswa_pages);
     <ul class="sidebar-menu" data-widget="tree">
       <li class="header">NAVIGASI UTAMA</li>
       
-      <li class="treeview <?php if ($is_karyawan_page) echo 'active'; ?>">
+      <li class="treeview <?php echo ($is_karyawan_active) ? 'active menu-open' : ''; ?>">
         <a href="#">
           <i class="fa fa-users"></i> <span>Karyawan</span>
           <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
           </span>
         </a>
-        <ul class="treeview-menu">
-          <li class="<?php if ($current_page == 'employee.php') echo 'active'; ?>"><a href="employee.php"><i class="fa fa-circle-o"></i> Data Karyawan</a></li>
-          <li class="<?php if ($current_page == 'face_absensi.php') echo 'active'; ?>"><a href="face_absensi.php"><i class="fa fa-circle-o"></i> Data Absensi</a></li>
-          <li class="<?php if ($current_page == 'notabsence.php') echo 'active'; ?>"><a href="notabsence.php"><i class="fa fa-circle-o"></i> Data Tidak Absensi</a></li>
-          <li class="<?php if ($current_page == 'belumabsence.php') echo 'active'; ?>"><a href="belumabsence.php"><i class="fa fa-circle-o"></i> Data Belum Absensi</a></li>
-          <li class="<?php if ($current_page == 'face_keamanan.php') echo 'active'; ?>"><a href="face_keamanan.php"><i class="fa fa-circle-o"></i> Data Keamanan</a></li>
-          <li class="<?php if ($current_page == 'ijin_absensi.php') echo 'active'; ?>"><a href="ijin_absensi.php"><i class="fa fa-circle-o"></i> Izin Absensi</a></li>
+        <ul class="treeview-menu" style="<?php echo ($is_karyawan_active) ? 'display: block;' : ''; ?>">
+          <li class="<?php echo ($current_page == 'employee.php') ? 'active' : ''; ?>">
+            <a href="employee.php"><i class="fa fa-circle-o"></i> Data Karyawan</a>
+          </li>
+          <li class="<?php echo ($current_page == 'face_absensi.php') ? 'active' : ''; ?>">
+            <a href="face_absensi.php"><i class="fa fa-circle-o"></i> Data Absensi</a>
+          </li>
+          <li class="<?php echo ($current_page == 'notabsence.php') ? 'active' : ''; ?>">
+            <a href="notabsence.php"><i class="fa fa-circle-o"></i> Data Tidak Absensi</a>
+          </li>
+          <li class="<?php echo ($current_page == 'belumabsence.php') ? 'active' : ''; ?>">
+            <a href="belumabsence.php"><i class="fa fa-circle-o"></i> Data Belum Absensi</a>
+          </li>
+          <li class="<?php echo ($current_page == 'face_keamanan.php') ? 'active' : ''; ?>">
+            <a href="face_keamanan.php"><i class="fa fa-circle-o"></i> Data Keamanan</a>
+          </li>
+          <li class="<?php echo ($current_page == 'ijin_absensi.php') ? 'active' : ''; ?>">
+            <a href="ijin_absensi.php"><i class="fa fa-circle-o"></i> Izin Absensi</a>
+          </li>
         </ul>
       </li>
 
-      <li class="treeview <?php if ($is_siswa_page) echo 'active'; ?>">
+      <li class="treeview <?php echo ($is_siswa_active) ? 'active menu-open' : ''; ?>">
         <a href="#">
           <i class="fa fa-graduation-cap"></i> <span>Peserta Didik</span>
           <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
           </span>
         </a>
-        <ul class="treeview-menu">
-          <li class="<?php if ($current_page == 'data_siswa.php') echo 'active'; ?>"><a href="data_siswa.php"><i class="fa fa-circle-o"></i> Data Peserta Didik</a></li>
-          <li class="<?php if ($current_page == 'absensi_siswa.php') echo 'active'; ?>"><a href="absensi_siswa.php"><i class="fa fa-circle-o"></i> Data Absensi</a></li>
-          <li class="<?php if ($current_page == 'tidak_absensi_siswa.php') echo 'active'; ?>"><a href="tidak_absensi_siswa.php"><i class="fa fa-circle-o"></i> Data Tidak Absensi</a></li>
-          <li class="<?php if ($current_page == 'belum_absensi_siswa.php') echo 'active'; ?>"><a href="belum_absensi_siswa.php"><i class="fa fa-circle-o"></i> Data Belum Absensi</a></li>
-          <li class="<?php if ($current_page == 'keamanan_siswa.php') echo 'active'; ?>"><a href="keamanan_siswa.php"><i class="fa fa-circle-o"></i> Data Keamanan</a></li>
-          <li class="<?php if ($current_page == 'ijin_absensi_siswa.php') echo 'active'; ?>"><a href="ijin_absensi_siswa.php"><i class="fa fa-circle-o"></i> Izin Absensi</a></li>
+        <ul class="treeview-menu" style="<?php echo ($is_siswa_active) ? 'display: block;' : ''; ?>">
+          <li class="<?php echo ($current_page == 'data_siswa.php') ? 'active' : ''; ?>">
+            <a href="data_siswa.php"><i class="fa fa-circle-o"></i> Data Peserta Didik</a>
+          </li>
+          <li class="<?php echo ($current_page == 'absensi_siswa.php') ? 'active' : ''; ?>">
+            <a href="absensi_siswa.php"><i class="fa fa-circle-o"></i> Data Absensi</a>
+          </li>
+          <li class="<?php echo ($current_page == 'tidak_absensi_siswa.php') ? 'active' : ''; ?>">
+            <a href="tidak_absensi_siswa.php"><i class="fa fa-circle-o"></i> Data Tidak Absensi</a>
+          </li>
+          <li class="<?php echo ($current_page == 'belum_absensi_siswa.php') ? 'active' : ''; ?>">
+            <a href="belum_absensi_siswa.php"><i class="fa fa-circle-o"></i> Data Belum Absensi</a>
+          </li>
+          <li class="<?php echo ($current_page == 'keamanan_siswa.php') ? 'active' : ''; ?>">
+            <a href="keamanan_siswa.php"><i class="fa fa-circle-o"></i> Data Keamanan</a>
+          </li>
+          <li class="<?php echo ($current_page == 'ijin_absensi_siswa.php') ? 'active' : ''; ?>">
+            <a href="ijin_absensi_siswa.php"><i class="fa fa-circle-o"></i> Izin Absensi</a>
+          </li>
         </ul>
       </li>
 
       <li class="header">AKUN</li>
-
       <li>
         <a href="logout.php">
           <i class="fa fa-sign-out"></i> <span>Logout</span>
@@ -87,4 +110,4 @@ $is_siswa_page = in_array($current_page, $siswa_pages);
       
     </ul>
   </section>
-  </aside>
+</aside>
