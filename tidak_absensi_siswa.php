@@ -78,12 +78,12 @@ if(isset($_POST['btn-submit'])){
                 $offset = ($pageno-1) * $no_of_records_per_page;
                 
                 // GANTI KUERI (baca dari 'ijin_siswa' JOIN 'siswa')
-                $base_sql = "FROM ijin_siswa i LEFT JOIN siswa e ON i.nama_pegawai = e.nama_pegawai WHERE i.app = 'Approved' ";
+                $base_sql = "FROM ijin_siswa i LEFT JOIN siswa e ON i.nama_pegawai = e.nama_siswa WHERE i.app = 'Approved' ";
                 
                 if (isset($_SESSION['valuedivisi']) && strlen($_SESSION['valuedivisi']) >= 1) {
                     if ($_SESSION['valuedivisi'] != 'All') {
                         $div = mysqli_real_escape_string($con, $_SESSION['valuedivisi']);
-                        $base_sql .= " AND e.kelas = '$div' "; // GANTI divisi -> kelas
+                        $base_sql .= " AND e.kelas = '$div' ";
                     }
                 }
                 if (isset($_SESSION['from']) && strlen($_SESSION['from']) > 5) {
@@ -98,7 +98,7 @@ if(isset($_POST['btn-submit'])){
                 $result = mysqli_query($con, $total_pages_sql);
                 $total_rows = mysqli_fetch_array($result)[0];
                 $total_pages = ceil($total_rows / $no_of_records_per_page);
-                $sqlemp = "SELECT i.*, e.nis, e.kelas " . $base_sql . " ORDER BY i.tanggal_ijin DESC LIMIT $offset, $no_of_records_per_page"; // GANTI e.divisi -> e.kelas
+                $sqlemp = "SELECT i.*, e.nis, e.kelas " . $base_sql . " ORDER BY i.tanggal_ijin DESC LIMIT $offset, $no_of_records_per_page";
                 
                 $query = mysqli_query($con, $sqlemp);
                 if (mysqli_num_rows($query) == 0) {
@@ -108,9 +108,9 @@ if(isset($_POST['btn-submit'])){
                 while ($row = mysqli_fetch_assoc($query)) {
                     echo '<tr>';
                     echo '<td>'. $noe++ . '</td>';
-                    echo '<td>'. htmlspecialchars($row['nis']) . '</td>'; // GANTI id_pegawai -> nis
-                    echo '<td>'. htmlspecialchars($row['nama_pegawai']) . '</td>';
-                    echo '<td>'. htmlspecialchars($row['kelas']) . '</td>'; // GANTI divisi -> kelas
+                    echo '<td>'. htmlspecialchars($row['nis']) . '</td>'; 
+                    echo '<td>'. htmlspecialchars($row['nama_siswa']) . '</td>';
+                    echo '<td>'. htmlspecialchars($row['kelas']) . '</td>';
                     echo '<td>'. htmlspecialchars($row['ijin']) . '</td>';
                     echo '<td>'. date('d M Y', strtotime($row['tanggal_ijin'])) . '</td>';
                     echo '<td>'. htmlspecialchars($row['alasan_ijin']) . '</td>'; 

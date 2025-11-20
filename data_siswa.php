@@ -26,7 +26,7 @@ if (!isset($_SESSION['nama_log'])){
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>MTI Absensi | siswa</title>
+  <title>MTI Absensi | Peserta Didik</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <?php
   include('scriptcss.php');
@@ -57,12 +57,12 @@ include('sidebar.php');
   <div class="content-wrapper">
     <section class="content-header">
       <h1>
-        Data siswa
-        <small>Semua siswa Terdaftar</small>
+        Data Siswa
+        <small>Semua Siswa Terdaftar</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="index.php"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">siswa</li>
+        <li class="active">Siswa</li>
       </ol>
     </section>
 
@@ -70,14 +70,14 @@ include('sidebar.php');
 
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><i class="fa fa-filter"></i> Filter Data siswa</h3>
+          <h3 class="box-title"><i class="fa fa-filter"></i> Filter Data Siswa</h3>
         </div>
         <div class="box-body">
           <form action="siswa.php" method="post">
             <div class="row">
               <div class="col-md-4 col-sm-6 col-xs-12">
                 <div class="form-group">
-                  <label>Pilih Filter kelas</label>
+                  <label>Pilih Filter Kelas</label>
                   <select name="valuekelas" class="form-control">
                       <option name="kelas" value="All">All</option>
                       <?php
@@ -102,10 +102,10 @@ include('sidebar.php');
         </div>
       </div> <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><i class="fa fa-table"></i> Data siswa</h3>
+          <h3 class="box-title"><i class="fa fa-table"></i> Data Peserta Didik</h3>
           <div class="box-tools pull-right" style="top: 10px";>
             <button type="button" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none; margin-right: 7px;" data-toggle="modal" data-target="#tambahsiswaModal">
-              <i class="fa fa-plus"></i><span class="btn-text-mobile-hide"> Tambah siswa</span>
+              <i class="fa fa-plus"></i><span class="btn-text-mobile-hide"> Tambah Siswa</span>
             </button>
             <a target="_blank" href="export_siswa.php" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none;">
               <i class="fa fa-file-excel-o"></i><span class="btn-text-mobile-hide"> EXPORT KE EXCEL</span>
@@ -158,14 +158,14 @@ include('sidebar.php');
 
                    // Data query
                    $sqlemp = "SELECT * " . $base_sql;
-                   $sqlemp .= "ORDER BY kelas,nama_pegawai LIMIT $offset, $no_of_records_per_page";
+                   $sqlemp .= "ORDER BY kelas,nama_siswa LIMIT $offset, $no_of_records_per_page";
 
                    $query = $con->query($sqlemp);
                    $noe = $offset+1;
                    while ($row = $query->fetch_assoc()) {
                             echo '<tr>';
                             echo '<td>'. $noe++ . '</td>';
-                            echo '<td>'. htmlspecialchars($row['nama_pegawai']) . '</td>';
+                            echo '<td>'. htmlspecialchars($row['nama_siswa']) . '</td>';
                             echo '<td>'. htmlspecialchars($row['nis']) . '</td>';
                             echo '<td>'. htmlspecialchars($row['email']) . '</td>';
                             echo '<td>'. htmlspecialchars($row['no_hp']) . '</td>';
@@ -180,7 +180,7 @@ include('sidebar.php');
                                             data-target="#editsiswaModal" 
                                             data-id="' . $row['id'] . '" 
                                             data-idpegawai="' . htmlspecialchars($row['nis']) . '" 
-                                            data-nama="' . htmlspecialchars($row['nama_pegawai']) . '"
+                                            data-nama="' . htmlspecialchars($row['nama_siswa']) . '"
                                             data-fotoprofil="' . htmlspecialchars($row['foto_profil']) . '">
                                         <i class="fa fa-edit"></i> Edit / Upload Foto
                                     </button>
@@ -245,8 +245,8 @@ include('sidebar.php');
             <input type="text" class="form-control" id="nis" name="nis" placeholder="Contoh: 1001" required>
           </div>
           <div class="form-group">
-            <label for="nama_pegawai">Nama Lengkap</label>
-            <input type="text" class="form-control" id="nama_pegawai" name="nama_pegawai" placeholder="Contoh: Budi Santoso" required>
+            <label for="nama_siswa">Nama Lengkap</label>
+            <input type="text" class="form-control" id="nama_siswa" name="nama_siswa" placeholder="Contoh: Budi Santoso" required>
           </div>
           <div class="form-group">
             <label for="email">Email</label>
@@ -272,7 +272,7 @@ include('sidebar.php');
         
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-          <button type="submit" class="btn btn-primary">Simpan siswa</button>
+          <button type="submit" class="btn btn-primary">Simpan Siswa</button>
         </div>
         
       </form>
@@ -297,12 +297,12 @@ include('sidebar.php');
           <input type="hidden" id="edit_id_siswa" name="id_siswa">
           
           <div class="form-group">
-            <label>ID Pegawai (NIP)</label>
+            <label>ID Peserta Didik (NIS)</label>
             <input type="text" class="form-control" id="edit_nis" name="nis" readonly>
           </div>
           <div class="form-group">
             <label>Nama Lengkap</label>
-            <input type="text" class="form-control" id="edit_nama_pegawai" name="nama_pegawai" required>
+            <input type="text" class="form-control" id="edit_nama_siswa" name="nama_siswa" required>
           </div>
           
           <hr>
