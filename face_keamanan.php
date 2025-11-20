@@ -118,6 +118,6 @@ if (!isset($_SESSION['nama_log'])){
 
   <?php include('footer.php'); ?>
 </div>
-<?php include('scriptjs.php'); ?>
+
 </body>
 </html>

@@ -215,7 +215,6 @@ if(isset($_POST['btn-submit'])){
 </div>
 <?php 
 
-include('scriptjs.php'); 
 ?>
 <script>
 $( function() {

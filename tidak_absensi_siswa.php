@@ -128,6 +128,6 @@ if(isset($_POST['btn-submit'])){
   </div>
   <?php include('footer.php'); ?>
 </div>
-<?php include('scriptjs.php'); ?>
+
 </body>
 </html>
