@@ -136,7 +136,7 @@ if(isset($_POST['btn-submit'])){
                    $offset = ($pageno-1) * $no_of_records_per_page;
                    
                    // Base query
-                   $base_sql = "FROM `absensi_siswa` fa JOIN `siswa` e ON fa.nama_pegawai=e.nama_siswa WHERE 1 ";
+                   $base_sql = "FROM `absensi_siswa` fa JOIN `siswa` e ON fa.nama_siswa=e.nama_siswa WHERE 1 ";
                     if (isset($_SESSION['valuedivisi']) && strlen($_SESSION['valuedivisi'])>=1) {
                         if ($_SESSION['valuedivisi']!='All') {
                         $div = mysqli_real_escape_string($con, $_SESSION['valuedivisi']);

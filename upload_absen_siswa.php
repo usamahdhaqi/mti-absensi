@@ -93,8 +93,8 @@
 
                             <form id="form-absen" action="proses_upload_siswa.php" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
-                                    <label for="id_pegawai"><b>ID Pegawai (NIP) Anda:</b></label>
-                                    <input type="text" class="form-control form-control-lg" name="id_pegawai" id="id_pegawai" placeholder="Masukkan ID Pegawai Anda" required>
+                                    <label for="id_siswa"><b>ID Siswa (NIS) Anda:</b></label>
+                                    <input type="text" class="form-control form-control-lg" name="id_siswa" id="id_siswa" placeholder="Masukkan NIS Anda" required>
                                 </div>
                                 <div class="form-group">
                                     <label><b>Ambil Foto (Selfie):</b></label>

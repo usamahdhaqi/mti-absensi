@@ -51,7 +51,7 @@ if (!isset($_SESSION['nama_log'])){
                 <tr>
                   <th>No</th>
                   <th>Waktu Kejadian</th>
-                  <th>ID Pegawai (Input)</th>
+                  <th>ID siswa (Input)</th>
                   <th>Pesan Error</th>
                   <th>Foto Upaya (Gagal)</th>
                   <th>Foto Profil (Master)</th>
@@ -84,11 +84,11 @@ if (!isset($_SESSION['nama_log'])){
                     echo '<tr>';
                     echo '<td>'. $no++ . '</td>';
                     echo '<td>'. date('d M Y H:i:s', strtotime($row['waktu_kejadian'])) . '</td>';
-                    echo '<td>'. htmlspecialchars($row['id_pegawai_input']) . '</td>';
+                    echo '<td>'. htmlspecialchars($row['nis_input']) . '</td>';
                     echo '<td>'. htmlspecialchars($row['pesan_error']) . '</td>';
                     
                     // Link untuk melihat foto GAGAL
-                    echo '<td><a href="hasil_keamanan/'. htmlspecialchars($row['path_foto_gagal']) .'" target="_blank" class="btn btn-danger btn-xs"><i class="fa fa-eye"></i> Lihat Foto Gagal</a></td>';
+                    echo '<td><a href="hasil_keamanan_siswa/'. htmlspecialchars($row['path_foto_gagal']) .'" target="_blank" class="btn btn-danger btn-xs"><i class="fa fa-eye"></i> Lihat Foto Gagal</a></td>';
                     
                     // Link untuk melihat foto MASTER
                     echo '<td><a href="'. htmlspecialchars($row['path_foto_master']) .'" target="_blank" class="btn btn-info btn-xs"><i class="fa fa-user-circle"></i> Lihat Master</a></td>';

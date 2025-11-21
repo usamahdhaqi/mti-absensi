@@ -47,7 +47,7 @@ if(isset($_POST['btn-submit'])){
           <h3 class="box-title"><i class="fa fa-filter"></i> Filter Divisi</h3>
         </div>
         <div class="box-body">
-          <form action="belumabsence.php" method="post">
+          <form action="belum_absensi_siswa.php" method="post">
             <div class="row">
               <div class="col-md-3">
                 <div class="form-group">

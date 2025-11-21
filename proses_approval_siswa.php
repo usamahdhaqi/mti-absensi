@@ -40,43 +40,43 @@ $sql_update = "UPDATE ijin_siswa
 
 if (mysqli_query($con, $sql_update)) {
     
-    // 2. AMBIL DATA LENGKAP KARYAWAN UNTUK NOTIFIKASI
+    // 2. AMBIL DATA LENGKAP siswa UNTUK NOTIFIKASI
     // (Kita JOIN dengan 'siswa' untuk mengambil 'no_hp')
     $sql_get_data = "SELECT 
-                        i.nama_pegawai, 
+                        i.nama_siswa, 
                         i.tanggal_ijin, 
                         i.ijin, 
                         e.no_hp,
                         e.nis 
                      FROM ijin_siswa i
-                     LEFT JOIN siswa e ON i.nama_pegawai = e.nama_pegawai
+                     LEFT JOIN siswa e ON i.nama_siswa = e.nama_siswa
                      WHERE i.id = '$ijin_id' LIMIT 1";
                      
     $result_data = mysqli_query($con, $sql_get_data);
     
     if (mysqli_num_rows($result_data) > 0) {
-        $data_karyawan = mysqli_fetch_assoc($result_data);
+        $data_siswa = mysqli_fetch_assoc($result_data);
         
-        $nama_pegawai = $data_karyawan['nama_pegawai'];
-        $no_hp = $data_karyawan['no_hp'];
-        $nis = $data_karyawan['nis'];
-        $tanggal_ijin_db = $data_karyawan['tanggal_ijin'];
+        $nama_siswa = $data_siswa['nama_siswa'];
+        $no_hp = $data_siswa['no_hp'];
+        $nis = $data_siswa['nis'];
+        $tanggal_ijin_db = $data_siswa['tanggal_ijin'];
         $tanggal_ijin_formatted = date('d M Y', strtotime($tanggal_ijin_db));
-        $jenis_ijin = $data_karyawan['ijin'];
+        $jenis_ijin = $data_siswa['ijin'];
         
         // 3. SIAPKAN PESAN WA
         $pesan_wa = "";
         
         if ($action == 'Approve') {
-            $pesan_wa = "Halo $nama_pegawai,\n\nPengajuan *($jenis_ijin)* Anda untuk tanggal *$tanggal_ijin_formatted* telah disetujui (Approved) oleh $admin_name.\n\nCatatan: $alasan_approval\n\nTerima kasih.\n(Pesan Otomatis - Absensi MTI)";
+            $pesan_wa = "Halo $nama_siswa,\n\nPengajuan *($jenis_ijin)* Anda untuk tanggal *$tanggal_ijin_formatted* telah disetujui (Approved) oleh $admin_name.\n\nCatatan: $alasan_approval\n\nTerima kasih.\n(Pesan Otomatis - Absensi MTI)";
             
-            // 4A. JIKA DISETUJUI, masukkan ke tabel 'tidak_absensi_siswa'
-            $sql_insert_not = "INSERT INTO tidak_absensi_siswa (siswa_id, nama_pegawai, tanggal_absen) 
-                               VALUES ('$nis', '$nama_pegawai', '$tanggal_ijin_db')";
+            // 4. JIKA DISETUJUI, masukkan ke tabel 'tidak_absensi_siswa'
+            $sql_insert_not = "INSERT INTO tidak_absensi_siswa (nis, nama_siswa, tanggal_absen) 
+                               VALUES ('$nis', '$nama_siswa', '$tanggal_ijin_db')";
             mysqli_query($con, $sql_insert_not);
 
         } else if ($action == 'Reject') {
-            $pesan_wa = "Halo $nama_pegawai,\n\nMohon maaf, pengajuan *($jenis_ijin)* Anda untuk tanggal *$tanggal_ijin_formatted* telah ditolak (Rejected) oleh $admin_name.\n\nAlasan: $alasan_approval\n\nSilakan hubungi HRD atau ajukan ulang jika diperlukan.\n(Pesan Otomatis - Absensi MTI)";
+            $pesan_wa = "Halo $nama_siswa,\n\nMohon maaf, pengajuan *($jenis_ijin)* Anda untuk tanggal *$tanggal_ijin_formatted* telah ditolak (Rejected) oleh $admin_name.\n\nAlasan: $alasan_approval\n\nSilakan hubungi HRD atau ajukan ulang jika diperlukan.\n(Pesan Otomatis - Absensi MTI)";
         }
         
         // 5. KIRIM WA (jika ada nomor HP)

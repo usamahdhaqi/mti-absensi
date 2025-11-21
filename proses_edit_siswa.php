@@ -4,19 +4,19 @@ include 'config/db.php';
 include 'helper_pesan.php'; // (Kita asumsikan helper_pesan.php ada)
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id_siswa = mysqli_real_escape_string($con, $_POST['id_karyawan']); // Nama 'id_karyawan' dari form
-    $nama_pegawai = mysqli_real_escape_string($con, $_POST['nama_pegawai']);
+    $id_siswa = mysqli_real_escape_string($con, $_POST['id_siswa']);
+    $nama_siswa = mysqli_real_escape_string($con, $_POST['nama_siswa']);
 
     // Ganti Kueri
-    $sql_update = "UPDATE siswa SET nama_pegawai = '$nama_pegawai' ";
+    $sql_update = "UPDATE siswa SET nama_siswa = '$nama_siswa' ";
 
     if (isset($_FILES['foto_profil_baru']) && $_FILES['foto_profil_baru']['error'] == 0) {
         $foto = $_FILES['foto_profil_baru'];
         $folder_tujuan = "foto_profil_siswa/"; // GANTI FOLDER
-        $id_pegawai_unik = $_POST['id_pegawai']; // Ini adalah NIS
+        $id_siswa_unik = $_POST['nis']; // Ini adalah NIS
         $ext = pathinfo($foto['name'], PATHINFO_EXTENSION);
-        $nama_bersih = preg_replace("/[^A-Za-z0-9]/", '', $nama_pegawai);
-        $nama_file_baru = $id_pegawai_unik . "_" . $nama_bersih . "." . $ext;
+        $nama_bersih = preg_replace("/[^A-Za-z0-9]/", '', $nama_siswa);
+        $nama_file_baru = $id_siswa_unik . "_" . $nama_bersih . "." . $ext;
         $path_tujuan = $folder_tujuan . $nama_file_baru;
 
         if (move_uploaded_file($foto['tmp_name'], $path_tujuan)) {

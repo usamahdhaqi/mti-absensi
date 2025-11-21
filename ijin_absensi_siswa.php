@@ -78,11 +78,11 @@ $admin_name = $_SESSION['nama_log'];
                     
                     echo '<tr>';
                     echo '<td>'. $no++ . '</td>';
-                    echo '<td>'. htmlspecialchars($row['nama_pegawai']) . '</td>';
+                    echo '<td>'. htmlspecialchars($row['nama_siswa']) . '</td>';
                     echo '<td>'. htmlspecialchars($row['ijin']) . '</td>';
                     echo '<td>'. $tanggal_ijin_formatted . '</td>';
                     echo '<td>'. htmlspecialchars($row['alasan_ijin']) . '</td>';
-                    echo '<td><a href="Lampiran/'. htmlspecialchars($row['lampiran']) .'" target="_blank" class="btn btn-info btn-xs"><i class="fa fa-eye"></i> Lihat</a></td>';
+                    echo '<td><a href="Lampiran_siswa/'. htmlspecialchars($row['lampiran']) .'" target="_blank" class="btn btn-info btn-xs"><i class="fa fa-eye"></i> Lihat</a></td>';
                     echo '<td>'. date('d M Y H:i', strtotime($row['waktu_buat_ijin'])) . '</td>';
                     
                     $status = $row['app'];
@@ -98,7 +98,7 @@ $admin_name = $_SESSION['nama_log'];
                                   data-toggle="modal" 
                                   data-target="#approvalModal"
                                   data-id_ijin="'. $row['id'] .'"
-                                  data-nama="'. htmlspecialchars($row['nama_pegawai']) .'"
+                                  data-nama="'. htmlspecialchars($row['nama_siswa']) .'"
                                   data-tanggal="'. $tanggal_ijin_formatted .'"
                                   data-alasan="'. htmlspecialchars($row['alasan_ijin']) .'">
                                 <i class="fa fa-gavel"></i> Tindakan
@@ -129,7 +129,7 @@ $admin_name = $_SESSION['nama_log'];
 <div class="modal fade" id="approvalModal" tabindex="-1" role="dialog" aria-labelledby="approvalModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <form action="proses_approval.php" method="POST">
+      <form action="proses_approval_siswa.php" method="POST">
         <div class="modal-header">
           <h4 class="modal-title" id="approvalModalLabel">Konfirmasi Tindakan</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -139,7 +139,7 @@ $admin_name = $_SESSION['nama_log'];
         <div class="modal-body">
           <p>Anda akan mengambil tindakan untuk:</p>
           <ul class="list-group">
-              <li class="list-group-item"><strong>Nama:</strong> <span id="modal_nama_pegawai"></span></li>
+              <li class="list-group-item"><strong>Nama:</strong> <span id="modal_nama_siswa"></span></li>
               <li class="list-group-item"><strong>Tanggal:</strong> <span id="modal_tanggal_ijin"></span></li>
               <li class="list-group-item"><strong>Alasan:</strong> <span id="modal_alasan_ijin"></span></li>
           </ul>
@@ -166,7 +166,6 @@ $admin_name = $_SESSION['nama_log'];
     </div>
   </div>
 </div>
-<?php include('scriptjs.php'); ?>
 
 <script>
 $(document).ready(function() {
@@ -179,7 +178,7 @@ $(document).ready(function() {
 
         // 2. Masukkan data tersebut ke dalam elemen-elemen di Modal
         $('#modal_ijin_id').val(id_ijin);
-        $('#modal_nama_pegawai').text(nama);
+        $('#modal_nama_siswa').text(nama);
         $('#modal_tanggal_ijin').text(tanggal);
         $('#modal_alasan_ijin').text(alasan);
         

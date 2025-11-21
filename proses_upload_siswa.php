@@ -73,7 +73,7 @@ function pencocokanWajahOpenSource($path_foto_master, $path_foto_absen) {
 
 if (isset($_POST['submit'])) {
     
-    $nis_input = mysqli_real_escape_string($con, $_POST['nis']);
+    $nis_input = mysqli_real_escape_string($con, $_POST['id_siswa']);
 
     // =================================================================
     // === LOGIKA WAKTU (PERBAIKAN TOTAL) ===
@@ -101,19 +101,19 @@ if (isset($_POST['submit'])) {
     
     
     // LANGKAH 1: VALIDASI ID siswa
-    $sql_cek_siswa = "SELECT nama_pegawai, nis, foto_profil FROM siswa WHERE nis = '$nis_input'";
+    $sql_cek_siswa = "SELECT nama_siswa, nis, foto_profil FROM siswa WHERE nis = '$nis_input'";
     $hasil_cek_siswa = mysqli_query($con, $sql_cek_siswa);
     
     if (mysqli_num_rows($hasil_cek_siswa) > 0) {
-        $data_pegawai = mysqli_fetch_assoc($hasil_cek_siswa);
-        $nama_pegawai = $data_pegawai['nama_pegawai'];
-        $db_nis = $data_pegawai['nis'];
-        $foto_profil_db = $data_pegawai['foto_profil'];
+        $data_siswa = mysqli_fetch_assoc($hasil_cek_siswa);
+        $nama_siswa = $data_siswa['nama_siswa'];
+        $db_nis = $data_siswa['nis'];
+        $foto_profil_db = $data_siswa['foto_profil'];
 
         // LANGKAH 2: CEK ABSENSI HARI INI
         // Gunakan $tanggal_hari_ini_db yang sudah pasti WIB
         $sql_cek_absen = "SELECT waktu_masuk, waktu_keluar FROM absensi_siswa
-                          WHERE employee_id = '$db_nis' AND DATE(waktu_masuk) = '$tanggal_hari_ini_db' 
+                          WHERE nis = '$db_nis' AND DATE(waktu_masuk) = '$tanggal_hari_ini_db' 
                           LIMIT 1";
         $hasil_cek_absen = mysqli_query($con, $sql_cek_absen);
         $record_hari_ini = mysqli_fetch_assoc($hasil_cek_absen);
@@ -178,7 +178,7 @@ if (isset($_POST['submit'])) {
         $folder_tujuan = "hasil_absensi_siswa/";
         $waktu_sekarang_file = $waktu_sekarang_obj->format('Y-m-d_H-i-s'); // Nama file berdasarkan waktu WIB
         $ext = pathinfo($foto['name'], PATHINFO_EXTENSION);
-        $nama_bersih = preg_replace("/[^A-Za-z0-9]/", '', $nama_pegawai);
+        $nama_bersih = preg_replace("/[^A-Za-z0-9]/", '', $nama_siswa);
         $nama_file_baru = $nama_bersih . "_" . $db_nis . "_" . $waktu_sekarang_file . "." . $ext;
         $path_tujuan = $folder_tujuan . $nama_file_baru;
         
@@ -196,10 +196,10 @@ if (isset($_POST['submit'])) {
             }
             
             if (move_uploaded_file($tmp_file, $path_tujuan)) { 
-                $sql_insert = "INSERT INTO face_absensi (nama_pegawai, employee_id, waktu_masuk, kamera, note, foto_masuk, state, aktif_notif, foto_keluar, selisih_waktu) 
-                               VALUES ('$nama_pegawai', '$db_nis', '$waktu_sekarang_db', 'HP siswa', 'Hadir', '$nama_file_baru', 'Hadir', 0, NULL, '$selisih_waktu_db')";
+                $sql_insert = "INSERT INTO absensi_siswa (nama_siswa, nis, waktu_masuk, kamera, note, foto_masuk, state, aktif_notif, foto_keluar, selisih_waktu) 
+                               VALUES ('$nama_siswa', '$db_nis', '$waktu_sekarang_db', 'HP siswa', 'Hadir', '$nama_file_baru', 'Hadir', 0, NULL, '$selisih_waktu_db')";
                 if (mysqli_query($con, $sql_insert)) {
-                    tampilkan_pesan('sukses', 'Absen Masuk Berhasil!', "Terima kasih, $nama_pegawai. Wajah terverifikasi.", "Waktu: " . $waktu_sekarang_obj->format('H:i:s') . " | Keterlambatan: $selisih_waktu_db");
+                    tampilkan_pesan('sukses', 'Absen Masuk Berhasil!', "Terima kasih, $nama_siswa. Wajah terverifikasi.", "Waktu: " . $waktu_sekarang_obj->format('H:i:s') . " | Keterlambatan: $selisih_waktu_db");
                 } else {
                     tampilkan_pesan('error', 'Database Error', 'File berhasil diupload tapi gagal dicatat ke database.', mysqli_error($con));
                 }
@@ -218,10 +218,10 @@ if (isset($_POST['submit'])) {
             }
             
             if (move_uploaded_file($tmp_file, $path_tujuan)) { 
-                $sql_update = "UPDATE face_absensi SET waktu_keluar = '$waktu_sekarang_db', foto_keluar = '$nama_file_baru' 
-                               WHERE employee_id = '$db_nis' AND DATE(waktu_masuk) = '$tanggal_hari_ini_db'";
+                $sql_update = "UPDATE absensi_siswa SET waktu_keluar = '$waktu_sekarang_db', foto_keluar = '$nama_file_baru' 
+                               WHERE nis = '$db_nis' AND DATE(waktu_masuk) = '$tanggal_hari_ini_db'";
                 if (mysqli_query($con, $sql_update)) {
-                    tampilkan_pesan('info', 'Absen Pulang Berhasil!', "Terima kasih, $nama_pegawai. Wajah terverifikasi.", "Waktu: " . $waktu_sekarang_obj->format('H:i:s'));
+                    tampilkan_pesan('info', 'Absen Pulang Berhasil!', "Terima kasih, $nama_siswa. Wajah terverifikasi.", "Waktu: " . $waktu_sekarang_obj->format('H:i:s'));
                 } else {
                     tampilkan_pesan('error', 'Database Error', 'Gagal update data pulang.', mysqli_error($con));
                 }
@@ -231,12 +231,12 @@ if (isset($_POST['submit'])) {
 
         // JIKA SUDAH SELESAI
         } else {
-            tampilkan_pesan('warning', 'Sudah Selesai!', "Halo $nama_pegawai, Anda sudah melakukan absen MASUK dan PULANG hari ini.", 'Tidak ada tindakan lebih lanjut diperlukan.');
+            tampilkan_pesan('warning', 'Sudah Selesai!', "Halo $nama_siswa, Anda sudah melakukan absen MASUK dan PULANG hari ini.", 'Tidak ada tindakan lebih lanjut diperlukan.');
         }
         
     } else {
-        // Jika ID Pegawai tidak ditemukan
-        tampilkan_pesan('error', 'ID Tidak Ditemukan', "ID Pegawai '$nis_input' tidak ditemukan atau tidak terdaftar.", 'Pastikan Anda memasukkan ID yang benar.');
+        // Jika ID siswa tidak ditemukan
+        tampilkan_pesan('error', 'ID Tidak Ditemukan', "ID siswa '$nis_input' tidak ditemukan atau tidak terdaftar.", 'Pastikan Anda memasukkan ID yang benar.');
     }
     
     mysqli_close($con);
