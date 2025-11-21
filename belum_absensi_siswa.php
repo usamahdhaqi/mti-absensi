@@ -10,7 +10,7 @@ if (!isset($_SESSION['nama_log'])){
 
 // Logika Filter
 if(isset($_POST['btn-submit'])){
-  $_SESSION['valuedivisi'] = $_POST['valuedivisi'];
+  $_SESSION['valuekelas'] = $_POST['valuekelas'];
 }
 ?>
 <!DOCTYPE html>
@@ -18,7 +18,7 @@ if(isset($_POST['btn-submit'])){
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>MTI Absensi | Siswa Belum Absen</title>
+  <title>MTI Absensi | Belum Absen</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <?php include('scriptcss.php'); ?>
 </head>
@@ -32,7 +32,7 @@ if(isset($_POST['btn-submit'])){
     <section class="content-header">
       <h1>
         Peserta Didik Belum Absen
-        <small>Data Siswa yang Belum Absen Hari Ini</small>
+        <small>Data Peserta Didik yang Belum Absen Hari Ini</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="index.php"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -44,23 +44,23 @@ if(isset($_POST['btn-submit'])){
 
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><i class="fa fa-filter"></i> Filter Divisi</h3>
+          <h3 class="box-title"><i class="fa fa-filter"></i> Filter kelas</h3>
         </div>
         <div class="box-body">
           <form action="belum_absensi_siswa.php" method="post">
             <div class="row">
               <div class="col-md-3">
                 <div class="form-group">
-                  <label>Pilih Filter Divisi</label>
-                  <select name="valuedivisi" class="form-control">
-                      <option name="divisi" value="All">All</option>
+                  <label>Pilih Filter Kelas</label>
+                  <select name="valuekelas" class="form-control">
+                      <option name="kelas" value="All">All</option>
                       <?php
-                        $divisisql="SELECT DISTINCT kelas FROM siswa WHERE 1 ORDER BY divisi";
-                        $query2 = mysqli_query($con, $divisisql);
+                        $kelassql="SELECT DISTINCT kelas FROM siswa WHERE 1 ORDER BY kelas";
+                        $query2 = mysqli_query($con, $kelassql);
                         while ($row = mysqli_fetch_assoc($query2)) {
                           $div=$row['kelas'];
-                          $selected = (isset($_SESSION['valuedivisi']) && $_SESSION['valuedivisi'] == $div) ? 'selected' : '';
-                          echo "<option value='". $div."' $selected>" . $div. "</option>\n";
+                          $selected = (isset($_SESSION['valuekelas']) && $_SESSION['valuekelas'] == $div) ? 'selected' : '';
+                          echo "<option name='kelas' value='". $div."' $selected>" . $div. "</option>\n";
                         }
                        ?>
                   </select>
@@ -86,8 +86,8 @@ if(isset($_POST['btn-submit'])){
               <thead>
                 <tr>
                   <th>No</th>
-                  <th>ID Peserta Didik (NIS)</th>
-                  <th>Nama Siswa</th>
+                  <th>NIS</th>
+                  <th>Nama siswa</th>
                   <th>Reg/PKL</th>
                   <th>Jurusan</th>
                   <th>No. HP</th>
@@ -108,26 +108,26 @@ if(isset($_POST['btn-submit'])){
                 date_default_timezone_set('Asia/Jakarta');
                 $tanggal_hari_ini = date('Y-m-d');
 
-                // 2. Siapkan Filter Divisi
-                $filter_divisi_sql = "";
+                // 2. Siapkan Filter kelas
+                $filter_kelas_sql = "";
                 // Perbaikan dari kode lama Anda (mengecek isset dan strlen)
-                if (isset($_SESSION['valuedivisi']) && strlen($_SESSION['valuedivisi']) >= 1) {
-                    if ($_SESSION['valuedivisi'] != 'All') {
-                        $div = mysqli_real_escape_string($con, $_SESSION['valuedivisi']);
-                        $filter_divisi_sql = " AND e.divisi = '$div' ";
+                if (isset($_SESSION['valuekelas']) && strlen($_SESSION['valuekelas']) >= 1) {
+                    if ($_SESSION['valuekelas'] != 'All') {
+                        $div = mysqli_real_escape_string($con, $_SESSION['valuekelas']);
+                        $filter_kelas_sql = " AND e.kelas = '$div' ";
                     }
                 }
 
                 // 3. Buat Kueri Basis (Base Query)
                 $base_sql = "
-                  FROM employee e
-                  LEFT JOIN face_absensi fa ON e.id_pegawai = fa.employee_id AND DATE(fa.waktu_masuk) = '$tanggal_hari_ini'
-                  LEFT JOIN not_absensi na ON e.id_pegawai = na.employee_id AND na.tanggal_absen = '$tanggal_hari_ini'
+                  FROM siswa e
+                  LEFT JOIN absensi_siswa fa ON e.nis = fa.nis AND DATE(fa.waktu_masuk) = '$tanggal_hari_ini'
+                  LEFT JOIN tidak_absensi_siswa na ON e.nis = na.nis AND na.tanggal_absen = '$tanggal_hari_ini'
                   WHERE 
-                      fa.id IS NULL  -- Filter: Yang belum ada di tabel 'face_absensi'
+                      fa.id IS NULL  -- Filter: Yang belum ada di tabel 'absensi_siswa'
                   AND 
-                      na.id IS NULL  -- Filter: Dan juga belum ada di tabel 'not_absensi'
-                  $filter_divisi_sql
+                      na.id IS NULL  -- Filter: Dan juga belum ada di tabel 'tidak_absensi_siswa'
+                  $filter_kelas_sql
                 ";
 
                 // 4. Kueri untuk Total Halaman (Pagination)
@@ -136,13 +136,13 @@ if(isset($_POST['btn-submit'])){
                 $total_rows = mysqli_fetch_array($result)[0];
                 $total_pages = ceil($total_rows / $no_of_records_per_page);
 
-                // 5. Kueri untuk Data Karyawan (Tampilan)
-                $sqlemp = "SELECT e.* " . $base_sql . " ORDER BY e.nama_pegawai ASC LIMIT $offset, $no_of_records_per_page";
+                // 5. Kueri untuk Data Peserta Didik (Tampilan)
+                $sqlemp = "SELECT e.* " . $base_sql . " ORDER BY e.nama_siswa ASC LIMIT $offset, $no_of_records_per_page";
 
                 $query = mysqli_query($con, $sqlemp);
                 
                 if (mysqli_num_rows($query) == 0) {
-                    echo '<tr><td colspan="6" class="text-center">Semua karyawan di divisi ini sudah absen atau izin.</td></tr>';
+                    echo '<tr><td colspan="6" class="text-center">Semua Peserta Didik di kelas ini sudah absen atau izin.</td></tr>';
                 }
 
                 $noe = $offset + 1; // Penomoran baris
@@ -150,7 +150,7 @@ if(isset($_POST['btn-submit'])){
                     echo '<tr>';
                     echo '<td>'. $noe++ . '</td>';
                     echo '<td>'. htmlspecialchars($row['nis']) . '</td>';
-                    echo '<td>'. htmlspecialchars($row['nama_pegawai']) . '</td>';
+                    echo '<td>'. htmlspecialchars($row['nama_siswa']) . '</td>';
                     echo '<td>'. htmlspecialchars($row['kelas']) . '</td>';
                     echo '<td>'. htmlspecialchars($row['jurusan']) . '</td>';
                     echo '<td>'. htmlspecialchars($row['no_hp']) . '</td>';
