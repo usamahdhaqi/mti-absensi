@@ -9,7 +9,7 @@ if (!isset($_SESSION['nama_log'])){
 
 // Logika Filter
 if(isset($_POST['btn-submit'])){
-  $_SESSION['valuedivisi'] = $_POST['valuedivisi'];
+  $_SESSION['valuekelas'] = $_POST['valuekelas'];
   $_SESSION['from'] = $_POST['from'];
   $_SESSION['to'] = $_POST['to'];
 }
@@ -32,8 +32,8 @@ if(isset($_POST['btn-submit'])){
   <div class="content-wrapper">
     <section class="content-header">
       <h1>
-        Karyawan Tidak Absen
-        <small>Log Karyawan yang Izin/Sakit (Sudah Disetujui)</small>
+        Peserta Didik Tidak Absen
+        <small>Log Peserta Didik yang Izin/Sakit (Sudah Disetujui)</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="index.php"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -52,16 +52,16 @@ if(isset($_POST['btn-submit'])){
             <div class="row">
               <div class="col-md-3">
                 <div class="form-group">
-                  <label>Pilih Filter Divisi</label>
-                  <select name="valuedivisi" class="form-control">
-                      <option name="divisi" value="All">All</option>
+                  <label>Pilih Filter kelas</label>
+                  <select name="valuekelas" class="form-control">
+                      <option name="kelas" value="All">All</option>
                       <?php
-                        $divisisql="SELECT DISTINCT divisi FROM siswa WHERE 1 ORDER BY divisi";
-                        $query2 = mysqli_query($con, $divisisql);
+                        $kelassql="SELECT DISTINCT kelas FROM siswa WHERE 1 ORDER BY kelas";
+                        $query2 = mysqli_query($con, $kelassql);
                         while ($row = mysqli_fetch_assoc($query2)) {
-                          $div=$row['divisi'];
-                          $selected = (isset($_SESSION['valuedivisi']) && $_SESSION['valuedivisi'] == $div) ? 'selected' : '';
-                          echo "<option name='divisi' value='". $div."' $selected>" . $div. "</option>\n";
+                          $div=$row['kelas'];
+                          $selected = (isset($_SESSION['valuekelas']) && $_SESSION['valuekelas'] == $div) ? 'selected' : '';
+                          echo "<option name='kelas' value='". $div."' $selected>" . $div. "</option>\n";
                         }
                        ?>
                   </select>
@@ -91,7 +91,7 @@ if(isset($_POST['btn-submit'])){
 
       <div class="box">
         <div class="box-header with-border">
-          <h3 class="box-title"><i class="fa fa-table"></i> Log Karyawan Tidak Absen</h3>
+          <h3 class="box-title"><i class="fa fa-table"></i> Log Peserta Didik Tidak Absen</h3>
           <div class="box-tools pull-right" style="top: 10px";>
             <a target="_blank" href="export_siswa.php" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none;">
               <i class="fa fa-file-excel-o"></i><span class="btn-text-mobile-hide"> EXPORT KE EXCEL</span>
@@ -104,9 +104,9 @@ if(isset($_POST['btn-submit'])){
               <thead>
                 <tr>
                   <th>No</th>
-                  <th>ID siswa</th>
+                  <th>NIS</th>
                   <th>Nama siswa</th>
-                  <th>Divisi</th>
+                  <th>kelas</th>
                   <th>Jenis Izin</th>
                   <th>Tanggal Izin</th>
                   <th>Keterangan</th> <th>Lampiran</th>
@@ -137,11 +137,11 @@ if(isset($_POST['btn-submit'])){
                       i.app = 'Approved'  -- Filter: HANYA yang sudah disetujui
                 ";
                 
-                // 3. Tambahkan Filter Divisi
-                if (isset($_SESSION['valuedivisi']) && strlen($_SESSION['valuedivisi']) >= 1) {
-                    if ($_SESSION['valuedivisi'] != 'All') {
-                        $div = mysqli_real_escape_string($con, $_SESSION['valuedivisi']);
-                        $base_sql .= " AND e.divisi = '$div' ";
+                // 3. Tambahkan Filter kelas
+                if (isset($_SESSION['valuekelas']) && strlen($_SESSION['valuekelas']) >= 1) {
+                    if ($_SESSION['valuekelas'] != 'All') {
+                        $div = mysqli_real_escape_string($con, $_SESSION['valuekelas']);
+                        $base_sql .= " AND e.kelas = '$div' ";
                     }
                 }
                 
@@ -163,8 +163,8 @@ if(isset($_POST['btn-submit'])){
                 $total_rows = mysqli_fetch_array($result)[0];
                 $total_pages = ceil($total_rows / $no_of_records_per_page);
 
-                // 6. Kueri untuk Data Karyawan (Tampilan)
-                $sqlemp = "SELECT i.*, e.id_siswa, e.divisi " . $base_sql . " ORDER BY i.tanggal_ijin DESC LIMIT $offset, $no_of_records_per_page";
+                // 6. Kueri untuk Data Peserta Didik (Tampilan)
+                $sqlemp = "SELECT i.*, e.nis, e.kelas " . $base_sql . " ORDER BY i.tanggal_ijin DESC LIMIT $offset, $no_of_records_per_page";
 
                 $query = mysqli_query($con, $sqlemp);
                 
@@ -176,9 +176,9 @@ if(isset($_POST['btn-submit'])){
                 while ($row = mysqli_fetch_assoc($query)) {
                     echo '<tr>';
                     echo '<td>'. $noe++ . '</td>';
-                    echo '<td>'. htmlspecialchars($row['id_siswa']) . '</td>';
+                    echo '<td>'. htmlspecialchars($row['nis']) . '</td>';
                     echo '<td>'. htmlspecialchars($row['nama_siswa']) . '</td>';
-                    echo '<td>'. htmlspecialchars($row['divisi']) . '</td>';
+                    echo '<td>'. htmlspecialchars($row['kelas']) . '</td>';
                     echo '<td>'. htmlspecialchars($row['ijin']) . '</td>';
                     echo '<td>'. date('d M Y', strtotime($row['tanggal_ijin'])) . '</td>';
                     
