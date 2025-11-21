@@ -39,7 +39,7 @@ if (!isset($_SESSION['nama_log'])){
         <div class="box-header with-border">
           <h3 class="box-title"><i class="fa fa-table"></i> Log Kegagalan Verifikasi</h3>
           <div class="box-tools pull-right" style="top: 10px";>
-            <a target="_blank" href="export_employee.php" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none;">
+            <a target="_blank" href="export_keamanan.php" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none;">
               <i class="fa fa-file-excel-o"></i><span class="btn-text-mobile-hide"> EXPORT KE EXCEL</span>
             </a>
           </div>
