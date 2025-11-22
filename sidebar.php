@@ -42,6 +42,12 @@ $is_siswa_active = in_array($current_page, $siswa_pages);
 
     <ul class="sidebar-menu" data-widget="tree">
       <li class="header">NAVIGASI UTAMA</li>
+
+      <li class="<?php echo ($current_page == 'lembaga.php') ? 'active' : ''; ?>">
+        <a href="lembaga.php">
+          <i class="fa fa-university"></i> <span>Profil Lembaga</span>
+        </a>
+      </li>
       
       <li class="treeview <?php echo ($is_karyawan_active) ? 'active menu-open' : ''; ?>">
         <a href="#">
