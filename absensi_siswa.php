@@ -42,7 +42,7 @@ if(isset($_POST['btn-submit'])){
   <div class="content-wrapper">
     <section class="content-header">
       <h1>
-        Data Absensi
+        Data Absensi Siswa
         <small>Histori Absensi Siswa</small>
       </h1>
       <ol class="breadcrumb">
@@ -101,7 +101,7 @@ if(isset($_POST['btn-submit'])){
         <div class="box-header with-border">
           <h3 class="box-title"><i class="fa fa-table"></i> Data Absensi Peserta Didik</h3>
           <div class="box-tools pull-right" style="top: 10px";>
-            <a target="_blank" href="export_employee.php" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none;">
+            <a target="_blank" href="export_absensi_siswa.php" class="btn btn-success btn-sm" style="background-color: var(--color-secondary-green); border: none;">
               <i class="fa fa-file-excel-o"></i><span class="btn-text-mobile-hide"> EXPORT KE EXCEL</span>
             </a>
           </div>
