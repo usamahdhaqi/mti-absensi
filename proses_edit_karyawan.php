@@ -10,6 +10,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $sql_update = "UPDATE employee SET nama_pegawai = '$nama_pegawai' ";
 
+    // Logika Warning
+    // Jika dicentang, isinya "SP1" (atau tanggal hari ini). Jika tidak, isinya NULL atau string kosong.
+    $w1 = isset($_POST['warning1']) ? date('Y-m-d') : ''; // Isi dengan tanggal hari ini jika dicentang
+    $w2 = isset($_POST['warning2']) ? date('Y-m-d') : '';
+    $w3 = isset($_POST['warning3']) ? date('Y-m-d') : '';
+
+    $sql_update = "UPDATE employee SET 
+                    nama_pegawai = '$nama_pegawai',
+                    warning1 = '$w1',
+                    warning2 = '$w2',
+                    warning3 = '$w3' ";
+
     // === PROSES UPLOAD FOTO PROFIL ===
     if (isset($_FILES['foto_profil_baru']) && $_FILES['foto_profil_baru']['error'] == 0) {
         

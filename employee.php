@@ -175,16 +175,19 @@ include('sidebar.php');
                             echo '<td>'. htmlspecialchars($row['warning2']) . '</td>';
                             echo '<td>'. htmlspecialchars($row['warning3']) . '</td>';
                             echo '<td>
-                                    <button type="button" class="btn btn-warning btn-sm btn-edit" 
-                                            data-toggle="modal" 
-                                            data-target="#editKaryawanModal" 
-                                            data-id="' . $row['id'] . '" 
-                                            data-idpegawai="' . htmlspecialchars($row['id_pegawai']) . '" 
-                                            data-nama="' . htmlspecialchars($row['nama_pegawai']) . '"
-                                            data-fotoprofil="' . htmlspecialchars($row['foto_profil']) . '">
-                                        <i class="fa fa-edit"></i> Edit / Upload Foto
-                                    </button>
-                                  </td>';
+                                <button type="button" class="btn btn-warning btn-sm btn-edit" 
+                                        data-toggle="modal" 
+                                        data-target="#editKaryawanModal" 
+                                        data-id="' . $row['id'] . '" 
+                                        data-idpegawai="' . htmlspecialchars($row['id_pegawai']) . '" 
+                                        data-nama="' . htmlspecialchars($row['nama_pegawai']) . '"
+                                        data-fotoprofil="' . htmlspecialchars($row['foto_profil']) . '"
+                                        data-w1="' . htmlspecialchars($row['warning1']) . '"
+                                        data-w2="' . htmlspecialchars($row['warning2']) . '"
+                                        data-w3="' . htmlspecialchars($row['warning3']) . '">
+                                    <i class="fa fa-edit"></i> Edit
+                                </button>
+                              </td>';
                             echo '</tr>';
                             echo '</tr>';
                    }
@@ -318,6 +321,28 @@ include('sidebar.php');
           </div>
         </div>
         
+        <hr>
+        <h5 class="text-warning"><i class="fa fa-exclamation-triangle"></i> Status Peringatan (SP)</h5>
+        <div class="form-group">
+            <label>Pilih Tingkat Peringatan:</label>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="warning1" value="SP1"> <strong>Warning 1</strong>
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="warning2" value="SP2"> <strong>Warning 2</strong>
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="warning3" value="SP3"> <strong>Warning 3</strong>
+                </label>
+            </div>
+            <small class="text-muted">*Centang untuk mengaktifkan SP. Hapus centang untuk mencabut SP.</small>
+        </div>
+
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
           <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
