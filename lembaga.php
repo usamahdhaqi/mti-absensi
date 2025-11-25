@@ -21,21 +21,145 @@ $logo_path = !empty($data['logo']) ? $data['logo'] : 'dist/img/logomti.jpg';
   <title>MTI Absensi | Profil Lembaga</title>
   <?php include('scriptcss.php'); ?>
   <style>
-      /* Sedikit styling tambahan untuk tampilan info */
-      .profile-info-name {
-          font-weight: 600;
-          color: #555;
-          width: 140px;
+      /* --- MODERN CSS OVERRIDES (THEME: ORANGE-GREEN) --- */
+      .content-wrapper {
+          background-color: #f4f6f9;
       }
-      .profile-info-value {
+      
+      .modern-card {
+          background: #fff;
+          border-radius: 15px;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+          border: none;
+          margin-bottom: 30px;
+          overflow: hidden;
+          transition: all 0.3s ease;
+      }
+      
+      .modern-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      }
+
+      /* --- GRADASI JINGGA KE HIJAU --- */
+      .profile-header-bg {
+          height: 130px;
+          /* Gradient from Orange to Green */
+          background: linear-gradient(135deg, #F57C00 0%, #43A047 100%); 
+          position: relative;
+      }
+
+      .profile-img-container {
+          position: relative;
+          margin-top: -75px;
+          text-align: center;
+      }
+
+      .profile-img-custom {
+          width: 160px;       /* Sedikit diperlebar */
+          height: 160px;      /* Tinggi sama agar rasio 1:1 (kotak) */
+          object-fit: contain; /* PENTING: Memastikan seluruh gambar masuk ke kotak tanpa terpotong (zoom out otomatis) */
+          border: 5px solid #fff;
+          border-radius: 25px; /* INI KUNCINYA: Membuat sudut tumpul, BUKAN bulat penuh */
+          box-shadow: 0 10px 20px rgba(0,0,0,0.15); /* Bayangan sedikit dipertegas */
+          background: #fff;   /* Memberi latar putih jika logo tidak memenuhi kotak */
+          padding: 5px;       /* Memberi sedikit jarak napas antara logo dan bingkai */
+      }
+
+      .profile-name-large {
+          font-size: 22px;
+          font-weight: 700;
+          color: #333;
+          margin-top: 15px;
+          margin-bottom: 5px;
+      }
+
+      /* Badge nuansa Jingga */
+      .profile-badge {
+          background: #FFF3E0; /* Orange muda */
+          color: #E65100;      /* Orange tua */
+          padding: 5px 15px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+          display: inline-block;
+          margin-bottom: 20px;
+          border: 1px solid #FFE0B2;
+      }
+
+      /* Tombol Custom Jingga */
+      .btn-orange-gradient {
+          background: linear-gradient(to right, #FF9800, #F57C00);
+          color: white;
+          border: none;
+          box-shadow: 0 4px 10px rgba(245, 124, 0, 0.3);
+          transition: all 0.2s;
+      }
+      .btn-orange-gradient:hover {
+          background: linear-gradient(to right, #F57C00, #EF6C00);
+          color: white;
+          box-shadow: 0 6px 15px rgba(245, 124, 0, 0.4);
+      }
+
+      .info-list-item {
+          display: flex;
+          align-items: center;
+          padding: 20px;
+          border-bottom: 1px solid #f0f0f0;
+      }
+      .info-list-item:last-child {
+          border-bottom: none;
+      }
+
+      .icon-box {
+          width: 50px;
+          height: 50px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 20px;
+          margin-right: 20px;
+          flex-shrink: 0;
+      }
+
+      /* Update warna icon agar match dengan tema alam/segar */
+      .bg-icon-primary { background: #E8F5E9; color: #2E7D32; } /* Hijau untuk nama */
+      .bg-icon-danger { background: #FFEBEE; color: #C62828; }   /* Merah tetap untuk lokasi */
+      .bg-icon-success { background: #E0F2F1; color: #00695C; }  /* Teal untuk telepon */
+      .bg-icon-warning { background: #FFF3E0; color: #EF6C00; }  /* Orange untuk email */
+      .bg-icon-info { background: #E3F2FD; color: #1565C0; }     /* Biru untuk web */
+
+      .info-content h5 {
+          margin: 0 0 5px 0;
+          color: #888;
+          font-size: 12px;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+      }
+
+      .info-content p {
+          margin: 0;
+          font-size: 16px;
+          font-weight: 600;
           color: #333;
       }
-      .box-info-row {
-          padding: 15px 0;
-          border-bottom: 1px solid #f4f4f4;
+
+      .info-content a {
+          color: #333;
+          text-decoration: none;
       }
-      .box-info-row:last-child {
-          border-bottom: none;
+      .info-content a:hover {
+          color: #F57C00; /* Hover jadi orange */
+      }
+
+      /* Callout Nuansa Hijau */
+      .modern-callout {
+          background: linear-gradient(to right, #E8F5E9, #fff);
+          border-left: 5px solid #43A047;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 5px 15px rgba(0,0,0,0.03);
       }
   </style>
 </head>
@@ -45,7 +169,10 @@ $logo_path = !empty($data['logo']) ? $data['logo'] : 'dist/img/logomti.jpg';
 
   <div class="content-wrapper">
     <section class="content-header">
-      <h1>Informasi Lembaga</h1>
+      <h1>
+        Informasi Lembaga
+        <small>Profil Instansi</small>
+      </h1>
     </section>
 
     <section class="content">
@@ -53,84 +180,96 @@ $logo_path = !empty($data['logo']) ? $data['logo'] : 'dist/img/logomti.jpg';
       <div class="row">
         
         <div class="col-md-4">
-          <div class="box box-primary">
-            <div class="box-body box-profile">
-              <div class="text-center">
-                  <img class="profile-user-img img-responsive img-circle" src="<?php echo $logo_path; ?>" alt="Logo Lembaga" style="width: 150px; height: 150px; border: 3px solid #eee; margin-bottom: 20px;">
-              </div>
+          <div class="modern-card">
+            <div class="profile-header-bg"></div>
+            
+            <div class="profile-img-container">
+                <img class="profile-img-custom" src="<?php echo $logo_path; ?>" alt="Logo Lembaga">
+            </div>
 
-              <h3 class="profile-username text-center"><?php echo htmlspecialchars($nama); ?></h3>
-              <p class="text-muted text-center">Profil Resmi</p>
-
-              <a href="#" class="btn btn-primary btn-block">
-                  <i class="fa fa-check-circle"></i> Terverifikasi
+            <div class="text-center" style="padding: 0 20px 30px 20px;">
+              <h3 class="profile-name-large"><?php echo htmlspecialchars($nama); ?></h3>
+              <span class="profile-badge"><i class="fa fa-check-circle"></i> Akun Resmi Terverifikasi</span>
+              
+              <p class="text-muted" style="font-size: 14px; line-height: 1.6;">
+                Profil ini digunakan sebagai identitas resmi pada seluruh output dokumen dan absensi sistem.
+              </p>
+              
+              <br>
+              <a href="edit_lembaga.php" class="btn btn-orange-gradient btn-block btn-flat">
+                  <i class="fa fa-cog"></i> &nbsp; Pengaturan Profil
               </a>
             </div>
           </div>
         </div>
 
         <div class="col-md-8">
-          <div class="box box-solid">
-            <div class="box-header with-border">
-              <h3 class="box-title"><i class="fa fa-info-circle"></i> Detail Lengkap</h3>
+          <div class="modern-card">
+            <div class="box-header with-border" style="padding: 20px;">
+              <h3 class="box-title" style="font-weight: 600; color: #2E7D32;"><i class="fa fa-building-o"></i> &nbsp;Detail Lengkap</h3>
             </div>
-            <div class="box-body">
+            <div class="box-body" style="padding: 0;">
                 
-                <div class="box-info-row">
-                    <div class="row">
-                        <div class="col-sm-3 profile-info-name">Nama Lembaga</div>
-                        <div class="col-sm-9 profile-info-value">
-                            <strong class="text-primary" style="font-size: 16px;"><?php echo htmlspecialchars($nama); ?></strong>
-                        </div>
+                <div class="info-list-item">
+                    <div class="icon-box bg-icon-primary">
+                        <i class="fa fa-id-card-o"></i>
+                    </div>
+                    <div class="info-content">
+                        <h5>Nama Lembaga</h5>
+                        <p><?php echo htmlspecialchars($nama); ?></p>
                     </div>
                 </div>
 
-                <div class="box-info-row">
-                    <div class="row">
-                        <div class="col-sm-3 profile-info-name">Alamat</div>
-                        <div class="col-sm-9 profile-info-value">
-                            <i class="fa fa-map-marker text-danger"></i> &nbsp; 
-                            <?php echo nl2br(htmlspecialchars($alamat)); ?>
-                        </div>
+                <div class="info-list-item">
+                    <div class="icon-box bg-icon-danger">
+                        <i class="fa fa-map-marker"></i>
+                    </div>
+                    <div class="info-content">
+                        <h5>Alamat Lengkap</h5>
+                        <p><?php echo nl2br(htmlspecialchars($alamat)); ?></p>
                     </div>
                 </div>
 
-                <div class="box-info-row">
-                    <div class="row">
-                        <div class="col-sm-3 profile-info-name">Telepon / Fax</div>
-                        <div class="col-sm-9 profile-info-value">
-                            <i class="fa fa-phone text-success"></i> &nbsp; 
-                            <?php echo htmlspecialchars($telepon); ?>
-                        </div>
+                <div class="info-list-item">
+                    <div class="icon-box bg-icon-success">
+                        <i class="fa fa-phone"></i>
+                    </div>
+                    <div class="info-content">
+                        <h5>Telepon / Fax</h5>
+                        <p><?php echo htmlspecialchars($telepon); ?></p>
                     </div>
                 </div>
 
-                <div class="box-info-row">
-                    <div class="row">
-                        <div class="col-sm-3 profile-info-name">Email Resmi</div>
-                        <div class="col-sm-9 profile-info-value">
-                            <i class="fa fa-envelope text-warning"></i> &nbsp; 
-                            <?php echo htmlspecialchars($email); ?>
-                        </div>
+                <div class="info-list-item">
+                    <div class="icon-box bg-icon-warning">
+                        <i class="fa fa-envelope-o"></i>
+                    </div>
+                    <div class="info-content">
+                        <h5>Email Resmi</h5>
+                        <p><?php echo htmlspecialchars($email); ?></p>
                     </div>
                 </div>
 
-                <div class="box-info-row">
-                    <div class="row">
-                        <div class="col-sm-3 profile-info-name">Website</div>
-                        <div class="col-sm-9 profile-info-value">
-                            <i class="fa fa-globe text-info"></i> &nbsp; 
-                            <a href="<?php echo htmlspecialchars($website); ?>" target="_blank"><?php echo htmlspecialchars($website); ?></a>
-                        </div>
+                <div class="info-list-item">
+                    <div class="icon-box bg-icon-info">
+                        <i class="fa fa-globe"></i>
+                    </div>
+                    <div class="info-content">
+                        <h5>Website</h5>
+                        <p>
+                            <a href="<?php echo htmlspecialchars($website); ?>" target="_blank">
+                                <?php echo htmlspecialchars($website); ?> <i class="fa fa-external-link" style="font-size: 12px; margin-left: 5px;"></i>
+                            </a>
+                        </p>
                     </div>
                 </div>
 
             </div>
           </div>
           
-          <div class="callout callout-info" style="background-color: #E8F5E9 !important; border-color: #388E3C !important; color: #2E7D32 !important;">
-            <h4><i class="icon fa fa-bullhorn"></i> Informasi!</h4>
-            <p>Data ini ditampilkan pada form absensi dan surat perizinan resmi. Jika terdapat kesalahan data, harap hubungi Administrator Database.</p>
+          <div class="modern-callout">
+            <h4 style="margin-top: 0; color: #2E7D32; font-size: 18px;"><i class="icon fa fa-bullhorn"></i> Informasi Penting</h4>
+            <p style="color: #555;">Data di atas disinkronisasi secara otomatis ke dalam <b>Kop Surat</b> dan <b>Formulir Absensi</b>. Pastikan data selalu diperbarui.</p>
           </div>
 
         </div>
