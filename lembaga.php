@@ -56,14 +56,14 @@ $logo_path = !empty($data['logo']) ? $data['logo'] : 'dist/img/logomti.jpg';
       }
 
       .profile-img-custom {
-          width: 160px;       /* Sedikit diperlebar */
-          height: 160px;      /* Tinggi sama agar rasio 1:1 (kotak) */
-          object-fit: contain; /* PENTING: Memastikan seluruh gambar masuk ke kotak tanpa terpotong (zoom out otomatis) */
+          width: 160px;
+          height: 160px;
+          object-fit: contain;
           border: 5px solid #fff;
-          border-radius: 25px; /* INI KUNCINYA: Membuat sudut tumpul, BUKAN bulat penuh */
-          box-shadow: 0 10px 20px rgba(0,0,0,0.15); /* Bayangan sedikit dipertegas */
-          background: #fff;   /* Memberi latar putih jika logo tidak memenuhi kotak */
-          padding: 5px;       /* Memberi sedikit jarak napas antara logo dan bingkai */
+          border-radius: 25px;
+          box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+          background: #fff;
+          padding: 5px;
       }
 
       .profile-name-large {
