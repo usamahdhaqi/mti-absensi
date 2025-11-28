@@ -175,19 +175,19 @@ include('sidebar.php');
                             echo '<td>'. htmlspecialchars($row['warning2']) . '</td>';
                             echo '<td>'. htmlspecialchars($row['warning3']) . '</td>';
                             echo '<td>
-                                <button type="button" class="btn btn-warning btn-sm btn-edit" 
-                                        data-toggle="modal" 
-                                        data-target="#editKaryawanModal" 
-                                        data-id="' . $row['id'] . '" 
-                                        data-idpegawai="' . htmlspecialchars($row['id_pegawai']) . '" 
-                                        data-nama="' . htmlspecialchars($row['nama_pegawai']) . '"
-                                        data-fotoprofil="' . htmlspecialchars($row['foto_profil']) . '"
-                                        data-w1="' . htmlspecialchars($row['warning1']) . '"
-                                        data-w2="' . htmlspecialchars($row['warning2']) . '"
-                                        data-w3="' . htmlspecialchars($row['warning3']) . '">
-                                    <i class="fa fa-edit"></i> Edit
-                                </button>
-                              </td>';
+                              <button type="button" class="btn btn-warning btn-sm btn-edit" 
+                                      data-toggle="modal" 
+                                      data-target="#editKaryawanModal" 
+                                      data-id="' . $row['id'] . '" 
+                                      data-idpegawai="' . htmlspecialchars($row['id_pegawai']) . '" 
+                                      data-nama="' . htmlspecialchars($row['nama_pegawai']) . '"
+                                      data-fotoprofil="' . htmlspecialchars($row['foto_profil']) . '"
+                                      data-w1="' . htmlspecialchars($row['warning1']) . '"
+                                      data-w2="' . htmlspecialchars($row['warning2']) . '"
+                                      data-w3="' . htmlspecialchars($row['warning3']) . '">
+                                  <i class="fa fa-edit"></i> Edit / Upload Foto
+                              </button>
+                            </td>';
                             echo '</tr>';
                             echo '</tr>';
                    }
@@ -430,11 +430,17 @@ $(document).ready(function() {
         var id_pegawai = $(this).data('idpegawai');
         var nama = $(this).data('nama');
         var foto = $(this).data('fotoprofil');
+        var w1 = $(this).data('w1'); // Pastikan tombol edit di tabel punya atribut data-w1="..."
+        var w2 = $(this).data('w2');
+        var w3 = $(this).data('w3');
 
         // Masukkan data ke dalam form di modal
         $('#edit_id_karyawan').val(id); // ID unik
         $('#edit_id_pegawai').val(id_pegawai);
         $('#edit_nama_pegawai').val(nama);
+        $('input[name="warning1"]').prop('checked', (w1 != '' && w1 != null));
+        $('input[name="warning2"]').prop('checked', (w2 != '' && w2 != null));
+        $('input[name="warning3"]').prop('checked', (w3 != '' && w3 != null));
         
         // Atur gambar profil yang ada
         if(foto) {

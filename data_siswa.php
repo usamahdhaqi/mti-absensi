@@ -163,31 +163,37 @@ include('sidebar.php');
                    $query = $con->query($sqlemp);
                    $noe = $offset+1;
                    while ($row = $query->fetch_assoc()) {
-                            echo '<tr>';
-                            echo '<td>'. $noe++ . '</td>';
-                            echo '<td>'. htmlspecialchars($row['nama_siswa']) . '</td>';
-                            echo '<td>'. htmlspecialchars($row['nis']) . '</td>';
-                            echo '<td>'. htmlspecialchars($row['email']) . '</td>';
-                            echo '<td>'. htmlspecialchars($row['no_hp']) . '</td>';
-                            echo '<td>'. htmlspecialchars($row['kelas']) . '</td>';
-                            echo '<td>'. htmlspecialchars($row['jurusan']) . '</td>';
-                            echo '<td>'. htmlspecialchars($row['warning1']) . '</td>';
-                            echo '<td>'. htmlspecialchars($row['warning2']) . '</td>';
-                            echo '<td>'. htmlspecialchars($row['warning3']) . '</td>';
-                            echo '<td>
-                                    <button type="button" class="btn btn-warning btn-sm btn-edit" 
-                                            data-toggle="modal" 
-                                            data-target="#editsiswaModal" 
-                                            data-id="' . $row['id'] . '" 
-                                            data-idpegawai="' . htmlspecialchars($row['nis']) . '" 
-                                            data-nama="' . htmlspecialchars($row['nama_siswa']) . '"
-                                            data-fotoprofil="' . htmlspecialchars($row['foto_profil']) . '">
-                                        <i class="fa fa-edit"></i> Edit / Upload Foto
-                                    </button>
-                                  </td>';
-                            echo '</tr>';
-                            echo '</tr>';
-                   }
+                        echo '<tr>';
+                        echo '<td>'. $noe++ . '</td>';
+                        echo '<td>'. htmlspecialchars($row['nama_siswa']) . '</td>';
+                        echo '<td>'. htmlspecialchars($row['nis']) . '</td>';
+                        echo '<td>'. htmlspecialchars($row['email']) . '</td>';
+                        echo '<td>'. htmlspecialchars($row['no_hp']) . '</td>';
+                        echo '<td>'. htmlspecialchars($row['kelas']) . '</td>';
+                        echo '<td>'. htmlspecialchars($row['jurusan']) . '</td>';
+                        echo '<td>'. htmlspecialchars($row['warning1']) . '</td>';
+                        echo '<td>'. htmlspecialchars($row['warning2']) . '</td>';
+                        echo '<td>'. htmlspecialchars($row['warning3']) . '</td>';
+                        
+                        // --- BAGIAN PERBAIKAN TOMBOL EDIT ---
+                        echo '<td>
+                                <button type="button" class="btn btn-warning btn-sm btn-edit" 
+                                        data-toggle="modal" 
+                                        data-target="#editsiswaModal" 
+                                        data-id="' . $row['id'] . '" 
+                                        data-nis="' . htmlspecialchars($row['nis']) . '" 
+                                        data-nama="' . htmlspecialchars($row['nama_siswa']) . '"
+                                        data-fotoprofil="' . htmlspecialchars($row['foto_profil']) . '"
+                                        data-w1="' . htmlspecialchars($row['warning1']) . '" 
+                                        data-w2="' . htmlspecialchars($row['warning2']) . '" 
+                                        data-w3="' . htmlspecialchars($row['warning3']) . '">
+                                    <i class="fa fa-edit"></i> Edit / Upload Foto
+                                </button>
+                            </td>';
+                        // ------------------------------------
+                        
+                        echo '</tr>';
+                    }
                   ?>
                   </tbody>
             </table>
@@ -318,6 +324,28 @@ include('sidebar.php');
           </div>
         </div>
         
+        <hr>
+        <h5 class="text-warning"><i class="fa fa-exclamation-triangle"></i> Status Peringatan (SP)</h5>
+        <div class="form-group">
+            <label>Pilih Tingkat Peringatan:</label>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="warning1" value="SP1"> <strong>Warning 1</strong>
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="warning2" value="SP2"> <strong>Warning 2</strong>
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="warning3" value="SP3"> <strong>Warning 3</strong>
+                </label>
+            </div>
+            <small class="text-muted">*Centang untuk mengaktifkan SP. Hapus centang untuk mencabut SP.</small>
+        </div>
+
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
           <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
@@ -397,25 +425,33 @@ $(document).ready(function() {
 
 <script>
 $(document).ready(function() {
-
     // JavaScript untuk memicu Modal EDIT
     $('.btn-edit').on('click', function() {
         // Ambil data dari atribut 'data-*' tombol
         var id = $(this).data('id');
-        var nis = $(this).data('idpegawai');
+        var nis = $(this).data('nis'); // Perhatikan di PHP saya ubah jadi data-nis (bukan data-idsiswa agar konsisten)
         var nama = $(this).data('nama');
         var foto = $(this).data('fotoprofil');
+        
+        // Ambil data warning yang sudah ditambahkan di PHP
+        var w1 = $(this).data('w1'); 
+        var w2 = $(this).data('w2');
+        var w3 = $(this).data('w3');
 
         // Masukkan data ke dalam form di modal
-        $('#edit_id_siswa').val(id); // ID unik
-        $('#edit_nis').val(nis);
-        $('#edit_nama_pegawai').val(nama);
-        
-        // Atur gambar profil yang ada
+        $('#edit_id_siswa').val(id); // ID (Primary Key) masuk ke hidden input
+        $('#edit_nis').val(nis);     // NIS masuk ke input text readonly
+        $('#edit_nama_siswa').val(nama);
+
+        // Logic Checkbox: Jika data warning tidak kosong, maka centang
+        $('input[name="warning1"]').prop('checked', (w1 != '' && w1 != null));
+        $('input[name="warning2"]').prop('checked', (w2 != '' && w2 != null));
+        $('input[name="warning3"]').prop('checked', (w3 != '' && w3 != null));
+
+        // Atur gambar profil
         if(foto) {
             $('#gambar_profil_sekarang').attr('src', 'foto_profil_siswa/' + foto);
         } else {
-            // Tampilkan gambar default jika tidak ada
             $('#gambar_profil_sekarang').attr('src', 'foto_profil_siswa/default.jpg'); 
         }
     });
